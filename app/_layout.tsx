@@ -1,37 +1,29 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { Stack, useNavigation } from "expo-router";
+import { useEffect } from "react";
+import { Linking } from "react-native";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
+  const navigation = useNavigation();
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const handleDeepLink = ({ url }: { url: string }) => {
+      if (url.includes('voluntech:///oauthredirect')) {
+        navigation.navigate('oauthredirect');
+      }
+    };
 
-  if (!loaded) {
-    return null;
-  }
+    Linking.addEventListener('url', handleDeepLink);
+
+    return () => {
+      Linking.removeAllListeners('url');
+    };
+  }, [navigation]);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="oauthredirect" options={{ headerShown: false }} />
+      <Stack.Screen name="(user)" options={{ headerShown: false }} />
+    </Stack>
   );
 }
