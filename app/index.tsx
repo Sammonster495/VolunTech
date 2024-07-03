@@ -63,11 +63,12 @@ export default function Index() {
     ]).start();
 
     setTimeout(async () => {
+      const user = await SecureStore.getItemAsync('user');
       const expire = await SecureStore.getItemAsync('expire');
-      if(expire && new Date(expire) > new Date())
+      if(user && expire && new Date(expire) > new Date())
         navigation.navigate('(user)');
       else
-        navigation.navigate('login');
+        navigation.navigate('register');
     }, 10000);
   }, []);
 

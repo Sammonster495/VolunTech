@@ -9,7 +9,7 @@ export default function Home() {
 
     async function handleSignout() {
         await signOut(auth);
-        await SecureStore.deleteItemAsync('user');
+        await SecureStore.deleteItemAsync('ngo');
         await SecureStore.deleteItemAsync('expire');
         navigation.navigate('register');
     }
