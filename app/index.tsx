@@ -20,7 +20,7 @@ export default function Index() {
       Animated.parallel([
         Animated.timing(svgOpacity, {
           toValue: 1,
-          duration: 3000,
+          duration: 2000,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
@@ -69,7 +69,7 @@ export default function Index() {
         navigation.navigate('(user)');
       else
         navigation.navigate('register');
-    }, 10000);
+    }, 7000);
   }, []);
 
   return (
