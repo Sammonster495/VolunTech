@@ -16,7 +16,7 @@ export default function Home() {
 
     return (
         <View>
-            <Text>Home</Text>
+            <Text>Maps</Text>
             <Button title="Sign Out" onPress={handleSignout} />
         </View>
     )
