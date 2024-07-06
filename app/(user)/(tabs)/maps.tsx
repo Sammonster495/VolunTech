@@ -1,4 +1,4 @@
-import { Button, Text, View } from "react-native";
+import { Button, Text, View, StyleSheet } from "react-native";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
 import * as SecureStore from 'expo-secure-store';
@@ -15,9 +15,18 @@ export default function Home() {
     }
 
     return (
-        <View>
-            <Text>Maps</Text>
+        <View style={styles.container}>
+            <Text>Maps View</Text>
             <Button title="Sign Out" onPress={handleSignout} />
         </View>
     )
 }
+
+const styles = StyleSheet.create({ 
+    container:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+     }
+    }
+)
