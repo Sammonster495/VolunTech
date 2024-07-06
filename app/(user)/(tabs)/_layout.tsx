@@ -1,8 +1,7 @@
 import { Link, Tabs } from "expo-router";
 import { useState } from "react";
-import { Image, View, Text, Dimensions } from "react-native";
+import { Image, SafeAreaView, Text, Dimensions, StyleSheet, View} from "react-native";
 import { TouchableOpacity } from "react-native";
-import { BlurView } from 'expo-blur'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 
@@ -10,7 +9,13 @@ export default function TabLayout() {
   const [open, setOpen] = useState(false);
 
   return (
-    <>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.menubar}>
+        <Image 
+          style={styles.image}
+          source={require('@/assets/images/profile.png')}
+          resizeMode="contain"/>
+      </View>
       <Tabs screenOptions={() => ({
         tabBarShowLabel: false,
         tabBarStyle: {
@@ -42,6 +47,27 @@ export default function TabLayout() {
           tabBarIcon: () => <Image source={require('@/assets/images/donations.png')} />
         }} />
       </Tabs>
-    </>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1,
+    backgroundColor: 'black'
+  },
+  menubar: {
+    height: 61, // Adjust based on your design
+    width: '100%',
+    backgroundColor: 'black',
+    justifyContent:'flex-end',
+    alignItems: 'flex-end',
+  },
+  image:{
+    height:61,
+    width:61,
+    borderWidth:1,
+    borderColor: 'white',
+    borderRadius:30
+  }
+})
