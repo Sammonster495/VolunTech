@@ -3,21 +3,14 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/firebaseConfig";
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from "expo-router";
+import MapContainer from "@/components/MapContainer";
 
 export default function Home() {
     const navigation = useNavigation();
 
-    async function handleSignout() {
-        await signOut(auth);
-        await SecureStore.deleteItemAsync('user');
-        await SecureStore.deleteItemAsync('expire');
-        navigation.navigate('register');
-    }
-
     return (
         <View style={styles.container}>
-            <Text>Maps View</Text>
-            <Button title="Sign Out" onPress={handleSignout} />
+            <MapContainer />
         </View>
     )
 }

@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
         height: 20, // Adjust height as needed
         width: '100%', // Takes full width
         backgroundColor: '#D3D3D3',
-        borderRadius: 20,
         overflow: 'hidden',
     },
     progressBar: {

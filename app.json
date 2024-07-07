@@ -27,7 +27,12 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.sammonster495.voluntech",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBqeTB4Vbev342dA6b4PWZf-H3S1QTZyrM"
+        }
+      }
     },
     "web": {
       "bundler": "metro",

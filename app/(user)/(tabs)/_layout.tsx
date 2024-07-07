@@ -1,16 +1,23 @@
 import { Link, Tabs } from "expo-router";
 import { useState } from "react";
-import { Image, SafeAreaView, Text, Dimensions, StyleSheet, View} from "react-native";
-import { TouchableOpacity } from "react-native";
-
-const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
+import * as SecureStore from 'expo-secure-store';
+import { Image, SafeAreaView, StyleSheet, Text, View} from "react-native";
 
 export default function TabLayout() {
-  const [open, setOpen] = useState(false);
+  const [name, setName] = useState<string>('');
+
+  useState(async() => {
+    const userData = await SecureStore.getItemAsync('user');
+    if(userData) {
+      const user = JSON.parse(userData);
+      setName(user.name);
+    }
+  })
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.menubar}>
+      <View style={styles.menubar} className="flex-row ">
+        <Text className="text-black text-center self-center">{name}</Text>
         <Image 
           style={styles.image}
           source={require('@/assets/images/profile.png')}
@@ -54,14 +61,15 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    backgroundColor: 'black'
+    backgroundColor: 'white'
   },
   menubar: {
     height: 61, // Adjust based on your design
     width: '100%',
-    backgroundColor: 'black',
     justifyContent:'flex-end',
     alignItems: 'flex-end',
+    marginTop: 20,
+    paddingHorizontal: 15,
   },
   image:{
     height:61,

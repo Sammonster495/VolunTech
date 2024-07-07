@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, SafeAreaView, Image, FlatList, Pressable } from "react-native";
+import { Text, View, StyleSheet, SafeAreaView, Image, FlatList, Pressable, TouchableOpacity } from "react-native";
 import { Header } from "react-native/Libraries/NewAppScreen";
 
 import ProgressBar from "@/components/ProgressBar";
@@ -56,9 +56,9 @@ export default function Tasks() {
                     renderItem={renderTask}
                     keyExtractor={item => item.id.toString()}
                     />
-                    <Pressable style={styles.register}>
+                    <TouchableOpacity style={styles.register}>
                         <Text>Register For Task</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
             </View>
         </SafeAreaView>
@@ -67,12 +67,12 @@ export default function Tasks() {
 
 const styles = StyleSheet.create({
         container:{
-            flex: 1,
+            flexDirection: 'column'
         },
         Content:{
             justifyContent:'center',
-            backgroundColor:'#1E1E1E',
-            padding:25
+            paddingHorizontal:25,
+            paddingBottom: 25
         },
         header:{
             fontSize:36,
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
             marginBottom:10
         },
         text:{
-            color:'#FFFFFF',
             fontSize: 16
         },
         task:{
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
             alignContent: 'center',
             alignItems: 'center',
             flex: 1,
-            padding:15
+            padding:10
         },
         taskList: {
             height:40,
