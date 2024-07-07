@@ -1,16 +1,28 @@
 import { Link, Tabs } from "expo-router";
 import { useState } from "react";
-import { Image, View, Text, Dimensions } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { BlurView } from 'expo-blur'
-
-const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
+import * as SecureStore from 'expo-secure-store';
+import { Image, SafeAreaView, StyleSheet, Text, View} from "react-native";
 
 export default function TabLayout() {
-  const [open, setOpen] = useState(false);
+  const [name, setName] = useState<string>('');
+
+  useState(async() => {
+    const userData = await SecureStore.getItemAsync('user');
+    if(userData) {
+      const user = JSON.parse(userData);
+      setName(user.name);
+    }
+  })
 
   return (
-    <>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.menubar} className="flex-row ">
+        <Text className="text-black text-center self-center">{name}</Text>
+        <Image 
+          style={styles.image}
+          source={require('@/assets/images/profile.png')}
+          resizeMode="contain"/>
+      </View>
       <Tabs screenOptions={() => ({
         tabBarShowLabel: false,
         tabBarStyle: {
@@ -42,6 +54,28 @@ export default function TabLayout() {
           tabBarIcon: () => <Image source={require('@/assets/images/donations.png')} />
         }} />
       </Tabs>
-    </>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container:{
+    flex: 1,
+    backgroundColor: 'white'
+  },
+  menubar: {
+    height: 61, // Adjust based on your design
+    width: '100%',
+    justifyContent:'flex-end',
+    alignItems: 'flex-end',
+    marginTop: 20,
+    paddingHorizontal: 15,
+  },
+  image:{
+    height:61,
+    width:61,
+    borderWidth:1,
+    borderColor: 'white',
+    borderRadius:30
+  }
+})

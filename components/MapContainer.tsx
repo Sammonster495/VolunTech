@@ -1,0 +1,158 @@
+import { useEffect, useState, useRef } from 'react';
+import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import * as Location from 'expo-location';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons from @expo/vector-icons
+
+interface LocationType {
+    latitude: number;
+    longitude: number;
+}
+
+export default function Map() {
+    const [location, setLocation] = useState<LocationType | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [search, setSearch] = useState<LocationType | null>(null);
+    const [searchActive, setSearchActive] = useState(false);
+    const mapRef = useRef<MapView>(null);
+
+    useEffect(() => {
+        let locationSubscription: Location.LocationSubscription | undefined;
+
+        const requestPermission = async () => {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            locationSubscription = await Location.watchPositionAsync(
+                {
+                    accuracy: Location.Accuracy.High,
+                    timeInterval: 60000, // Update every 1 minute
+                    distanceInterval: 10, // Update every 10 meters
+                },
+                (newLocation) => {
+                    const newLoc = {
+                        latitude: newLocation.coords.latitude,
+                        longitude: newLocation.coords.longitude,
+                    };
+                    setLocation(newLoc);
+
+                    // Only update the map region if no search has been performed
+                    if (!searchActive && mapRef.current) {
+                        mapRef.current.animateToRegion({
+                            ...newLoc,
+                            latitudeDelta: 0.01,
+                            longitudeDelta: 0.01,
+                        }, 1000);
+                    }
+                }
+            );
+        };
+
+        requestPermission();
+
+        // Cleanup the location subscription when the component unmounts
+        return () => {
+            if (locationSubscription) {
+                locationSubscription.remove();
+            }
+        };
+    }, [searchActive]);
+
+    const handleSearch = (data: any, details: any) => {
+        if (details) {
+            const { lat, lng } = details.geometry.location;
+            const newSearchLocation = { latitude: lat, longitude: lng };
+            setSearch(newSearchLocation);
+            setSearchActive(true);
+
+            // Animate the map to the new search location
+            if (mapRef.current) {
+                mapRef.current.animateToRegion({
+                    ...newSearchLocation,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                }, 1000);
+            }
+        }
+    };
+
+    const handleLocate = () => {
+        if (location && mapRef.current) {
+            mapRef.current.animateToRegion({
+                ...location,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+            }, 1000);
+            setSearchActive(false); // Reset the search flag
+        }
+    };
+
+    return (
+        <View style={{ flex: 1, width: "100%" }}>
+            <GooglePlacesAutocomplete
+                placeholder='Search...'
+                fetchDetails={true}
+                onPress={handleSearch}
+                query={{
+                    key: "AIzaSyBqeTB4Vbev342dA6b4PWZf-H3S1QTZyrM",
+                    language: "en",
+                }}
+                styles={{
+                    container: { flex: 0, width: "85%", zIndex: 1, position: "absolute", alignSelf: "center", top: 17 },
+                    listView: { backgroundColor: "white" },
+                }}
+            />
+            <MapView
+                ref={mapRef}
+                provider={PROVIDER_GOOGLE}
+                style={{ flex: 1, width: "100%", height: "100%", bottom: 70 }}
+                region={{
+                    latitude: location?.latitude || 0,
+                    longitude: location?.longitude || 0,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                }}
+            >
+                {location && (
+                    <Circle
+                        center={{
+                            latitude: location.latitude,
+                            longitude: location.longitude,
+                        }}
+                        radius={40}
+                        strokeColor="rgba(0, 150, 255, 1)"
+                        fillColor="rgba(0, 150, 255, 0.6)"
+                    />
+                )}
+                {search && (
+                    <Marker
+                        coordinate={{
+                            latitude: search.latitude,
+                            longitude: search.longitude,
+                        }}
+                    />
+                )}
+            </MapView>
+            <TouchableOpacity style={styles.locateButton} onPress={handleLocate}>
+                <Ionicons name="locate" size={24} color="white" />
+            </TouchableOpacity>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    locateButton: {
+        position: 'absolute',
+        bottom: 100,
+        right: 20,
+        backgroundColor: 'rgba(0, 150, 255, 1)',
+        borderRadius: 50,
+        padding: 10,
+        elevation: 5,
+        zIndex: 10,
+    },
+});
