@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
   menubar: {
-    height: 61, // Adjust based on your design
+    height: 60, // Adjust based on your design
     width: '100%',
     backgroundColor: 'black',
     justifyContent:'flex-end',

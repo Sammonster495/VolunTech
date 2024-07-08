@@ -5,7 +5,6 @@ export default function DonationLayout() {
         <Stack>
             <Stack.Screen name="donations1" options={{headerShown: false}} />
             <Stack.Screen name="donations2" options={{headerShown: false}} />
-            <Stack.Screen name="donations3" options={{headerShown: false}} />
         </Stack>
     )
 }
