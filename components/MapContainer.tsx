@@ -5,6 +5,8 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Import Ionicons from @expo/vector-icons
 
+
+
 interface LocationType {
     latitude: number;
     longitude: number;
@@ -21,12 +23,6 @@ export default function Map() {
         let locationSubscription: Location.LocationSubscription | undefined;
 
         const requestPermission = async () => {
-            const { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
-
             locationSubscription = await Location.watchPositionAsync(
                 {
                     accuracy: Location.Accuracy.High,

@@ -7,7 +7,7 @@ import { db, auth } from "@/firebase/firebaseConfig";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SecureStore from 'expo-secure-store';
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from "react";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -35,9 +35,20 @@ export default function Register() {
                         navigation.navigate('register');
                     }else {
                         const userData = userDoc.data();
-                        await SecureStore.setItemAsync('user', JSON.stringify(userData));
-                        await SecureStore.setItemAsync('expire', expirationTime);
                         const page = userData.type === 'normal' ? '(user)' : '(ngo)';
+                        const role = userData.type === 'normal' ? 'user' : 'ngo';
+                        await SecureStore.setItemAsync(role, JSON.stringify({
+                            id: userData.id,
+                            image: result.user.photoURL,
+                            name: userData.name,
+                            phone: userData.phone,
+                            state: userData.state,
+                            district: userData.district,
+                            skill: userData.skill,
+                            type: userData.type,
+                            designation: role === 'ngo' ? userData.designation : null
+                        }));
+                        await SecureStore.setItemAsync('expire', expirationTime);
                         navigation.navigate(page);
                     }
                 } catch (error) {

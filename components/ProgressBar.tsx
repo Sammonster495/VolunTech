@@ -7,11 +7,11 @@ interface ProgressBarProps {
     required:number;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ progress, signed, required }) => {
+export default function ProgressBar(props: ProgressBarProps) {
     return (
         <View style={styles.progressBarContainer}>
-            <Text style={styles.progressText}>{`${signed}/${required}`}</Text>
-            <View style={[styles.progressBar, { width: `${progress * 100}%` }]}></View>
+            <Text style={styles.progressText}>{`${props.signed}/${props.required}`}</Text>
+            <View style={[styles.progressBar, { width: `${props.progress * 100}%` }]}></View>
         </View>
     );
 }
@@ -19,14 +19,15 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress, signed, required })
 const styles = StyleSheet.create({
     progressBarContainer: {
         height: 20, // Adjust height as needed
-        width: '100%', // Takes full width
+        width: '50%', // Takes full width
         backgroundColor: '#D3D3D3',
         overflow: 'hidden',
+        position: 'absolute'
     },
     progressBar: {
         height: '100%',
-        backgroundColor: '#74A608',
-        position: 'relative', 
+        backgroundColor: '#74a608',
+        position: 'relative',
     },
     progressText: {
         fontSize: 14,
@@ -40,5 +41,3 @@ const styles = StyleSheet.create({
         zIndex: 1, // Ensures text is above progress bar visually
     },
 });
-
-export default ProgressBar;

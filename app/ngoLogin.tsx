@@ -8,7 +8,7 @@ import * as Google from 'expo-auth-session/providers/google';
 import { RNFetchBlob } from 'rn-fetch-blob';
 import { collection, query, addDoc, getDocs, updateDoc, where } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
-import { getDownloadURL, ref, uploadBytes, uploadBytesResumable, uploadString } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, auth, storage } from "@/firebase/firebaseConfig";
 import { useNavigation } from "expo-router";
 
