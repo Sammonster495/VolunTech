@@ -13,7 +13,8 @@ const firebaseConfig = {
   projectId: "voluntech-18f11",
   storageBucket: "voluntech-18f11.appspot.com",
   messagingSenderId: "217499561785",
-  appId: "1:217499561785:web:9064e41f89bd73093fc2e8"
+  appId: "1:217499561785:web:9064e41f89bd73093fc2e8",
+  measurementId: "G-X6F1CYVQYY"
 };
 
 // Initialize Firebase

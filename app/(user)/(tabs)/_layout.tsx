@@ -29,11 +29,12 @@ export default function TabLayout() {
           height: 70,
           width: "100%",
           position: 'absolute',
-          zIndex: 1
+          zIndex: 1,
+          backgroundColor: '#f6ffe2',
         },
-        tabBarActiveBackgroundColor: '#d5e2f2',
+        tabBarActiveBackgroundColor: '#83a638',
       })}>
-        <Tabs.Screen name="maps" options={{
+        <Tabs.Screen name="(maps)" options={{
           headerShown: false,
           tabBarIcon: () => <Image source={require('@/assets/images/maps.png')} />
         }} />
@@ -61,10 +62,10 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: '#f6ffe2'
   },
   menubar: {
-    height: 61, // Adjust based on your design
+    height: 60, // Adjust based on your design
     width: '100%',
     justifyContent:'flex-end',
     alignItems: 'flex-end',

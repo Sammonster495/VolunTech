@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator, Linking } from "react-native";
+import { TextInput, View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as Google from 'expo-auth-session/providers/google';
@@ -54,20 +54,25 @@ export default function Login() {
                         if (register) {
                             if(selectType === 'normal') {
                                 await setDoc(userDocRef, {
+                                    id: userDocRef.id,
                                     name: name,
                                     phone: phone,
                                     state: selectState,
                                     district: selectDistrict,
                                     skill: selectSkill,
-                                    type: selectType
+                                    type: selectType,
+                                    registeredTasks: []
                                 });
+                                let proofUrl: string;
                                 if(proof?.name) {
-                                    const proofUrl = await uploadFile(proof, `/users/proof/${userDocRef.id}`);
+                                    proofUrl = await uploadFile(proof, `/users/proof/${userDocRef.id}`);
                                     await updateDoc(userDocRef, {
                                         proof: proofUrl
                                     });
                                 }
                                 await SecureStore.setItemAsync('user', JSON.stringify({
+                                    id: userDocRef.id,
+                                    image: result.user.photoURL,
                                     name: name,
                                     phone: phone,
                                     state: selectState,
@@ -78,22 +83,33 @@ export default function Login() {
                                 await SecureStore.setItemAsync('expire', expirationTime);
                                 navigation.navigate('(user)');
                             }else if(selectType === 'ngo') {
-                                const q = query(collection(db, 'ngo'), where('name', '==', selectNgo), where('members', 'array-contains', name));
-                                const querySnapshot = await getDocs(q);
-                                if(querySnapshot.empty) {
+                                const ngoQuery = query(collection(db, 'ngo'), where('name', '==', selectNgo));
+                                const ngoDocs = await getDocs(ngoQuery);
+                                let ngoDocRef;
+                                if(!ngoDocs.empty)
+                                    ngoDocRef = ngoDocs.docs[0].ref;
+                                const qm = query(collection(db, 'ngo'), where('name', '==', selectNgo), where('members', 'array-contains', result.user.email));
+                                const qh = query(collection(db, 'ngo'), where('name', '==', selectNgo), where('heads', 'array-contains', result.user.email));
+                                const querySnapshotM = await getDocs(qm);
+                                const querySnapshotH = await getDocs(qh);
+                                if(querySnapshotM.empty && querySnapshotH.empty) {
                                     alert('You do not appear to belong to the NGO you specified.Please confirm with the respective NGO');
                                     navigation.navigate('register');
                                 }else {
                                     await setDoc(userDocRef, {
+                                        id: userDocRef.id,
                                         name: name,
                                         phone: phone,
                                         state: selectState,
                                         district: selectDistrict,
                                         skill: selectSkill,
-                                        type: selectType
+                                        registeredTasks: [],
+                                        viewedPendingReports: [],
+                                        viewedVerifiedReports: [],
+                                        viewedVerifiedNotifications: [],
+                                        type: { id: ngoDocRef?.id, name: selectNgo },
+                                        designation: querySnapshotH.empty ? 'member' : 'head'
                                     });
-                                    const q = query(collection(db, 'ngo'), where('name', '==', selectNgo));
-                                    const querySnapshot = await getDocs(q);
                                     let proofUrl: string;
                                     if(proof?.name){
                                         proofUrl = await uploadFile(proof, `/users/proof/${userDocRef.id}`);
@@ -102,12 +118,15 @@ export default function Login() {
                                         });
                                     }
                                     await SecureStore.setItemAsync('ngo', JSON.stringify({
+                                        id: userDocRef.id,
+                                        image: result.user.photoURL,
                                         name: name,
                                         phone: phone,
                                         state: selectState,
                                         district: selectDistrict,
                                         skill: selectSkill,
-                                        type: selectType
+                                        type: { id: ngoDocRef?.id, name: selectNgo },
+                                        designation: querySnapshotH.empty ? 'member' : 'head'
                                     }));
                                     await SecureStore.setItemAsync('expire', expirationTime);
                                     navigation.navigate('(ngo)');
@@ -115,7 +134,6 @@ export default function Login() {
                             }
                         }
                     } else {
-                        const userData = userDoc.data();
                         alert('User account already exists. Please login');
                         navigation.navigate('volunteerLogin');
                         setRegister(false);
@@ -247,7 +265,7 @@ export default function Login() {
                                 onValueChange={(itemValue, itemIndex) => setSelectSkill(itemValue)}
                             >
                                 <Picker.Item label="Select your Skill" value="" />
-                                {['Medical', 'Transport', 'Rescue', 'Finance', 'Shelter Building', 'Others'].map(skill => <Picker.Item key={skill} label={skill} value={skill} />)}
+                                {['Medical', 'Transport', 'Rescue', 'Finance', 'Shelter Building', 'Resource Allocation'].map(skill => <Picker.Item key={skill} label={skill} value={skill.split(' ')[0].toLowerCase()} />)}
                             </Picker>
                             <Picker
                                 selectedValue={selectType}
