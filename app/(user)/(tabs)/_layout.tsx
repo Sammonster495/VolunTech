@@ -1,7 +1,7 @@
-import { Link, Tabs } from "expo-router";
+import { Link, Tabs, useNavigation } from "expo-router";
 import { useState } from "react";
 import * as SecureStore from 'expo-secure-store';
-import { Image, SafeAreaView, StyleSheet, Text, View} from "react-native";
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
 export default function TabLayout() {
   const [name, setName] = useState<string>('');
@@ -14,14 +14,24 @@ export default function TabLayout() {
     }
   })
 
+  const navigation = useNavigation();
+
+  const navigateToProfile = () =>{
+    navigation.navigate('profile');
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.menubar} className="flex-row ">
         <Text className="text-black text-center self-center">{name}</Text>
-        <Image 
-          style={styles.image}
-          source={require('@/assets/images/profile.png')}
-          resizeMode="contain"/>
+        <TouchableOpacity
+         onPress={navigateToProfile}
+        >
+          <Image 
+            style={styles.image}
+            source={require('@/assets/images/profile.png')}
+            resizeMode="contain"/>
+        </TouchableOpacity>
       </View>
       <Tabs screenOptions={() => ({
         tabBarShowLabel: false,
