@@ -15,6 +15,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@cometchat-pro/react-native-chat": "^3.0.13",
     "@expo-google-fonts/dev": "^0.2.3",
     "@expo-google-fonts/roboto-serif": "^0.2.3",
     "@expo/vector-icons": "^14.0.2",

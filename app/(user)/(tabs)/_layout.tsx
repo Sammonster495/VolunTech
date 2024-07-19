@@ -4,33 +4,30 @@ import * as SecureStore from 'expo-secure-store';
 import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
 export default function TabLayout() {
-  const [name, setName] = useState<string>('');
+  const [user, setUser] = useState<any>();
 
   useState(async() => {
     const userData = await SecureStore.getItemAsync('user');
     if(userData) {
       const user = JSON.parse(userData);
-      setName(user.name);
+      setUser(user);
     }
   })
 
   const navigation = useNavigation();
 
-  const navigateToProfile = () =>{
-    navigation.navigate('profile');
-  }
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.menubar}>
-        <Text className="text-black text-center self-center">{name}</Text>
-        <TouchableOpacity
-         onPress={navigateToProfile}
+      <View style={styles.menubar} className="flex-row mt-[5.6%]">
+        <Image source={require('@/assets/images/logo.png')} className="h-[56] w-[64] self-center" />
+        <Text className="text-black text-right self-center mr-2 w-3/5">{user?.name}</Text>
+        <TouchableOpacity className="self-center"
+         onPress={() => navigation.navigate('profile')}
         >
-          <Image 
-            style={styles.image}
-            source={require('@/assets/images/profile.png')}
-            resizeMode="contain"/>
+          {user && <Image 
+          style={styles.image}
+          source={{ uri: user?.image}}
+          resizeMode="contain"/>}
         </TouchableOpacity>
       </View>
       <Tabs screenOptions={() => ({
@@ -52,7 +49,7 @@ export default function TabLayout() {
           headerShown: false,
           tabBarIcon: () => <Image source={require('@/assets/images/tasks.png')} />
         }} />
-        <Tabs.Screen name="(chats)" options={{
+        <Tabs.Screen name="chats" options={{
           headerShown: false,
           tabBarIcon: () => <Image source={require('@/assets/images/chats.png')} />
         }} />
@@ -80,7 +77,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent:'flex-end',
     alignItems: 'flex-end',
-    marginTop: 20,
     paddingHorizontal: 15,
     shadowColor: '#000', // Shadow color
     shadowOffset: { width: 0, height: 2 }, // Offset of the shadow
@@ -89,8 +85,8 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   image:{
-    height:61,
-    width:61,
+    height:46,
+    width:46,
     borderWidth:1,
     borderColor: 'white',
     borderRadius:30

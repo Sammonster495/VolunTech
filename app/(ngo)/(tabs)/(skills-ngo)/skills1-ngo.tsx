@@ -7,7 +7,7 @@ export default function skills1() {
     const navigation = useNavigation();
 
     const navigateToSkills = (skillId: number) => {
-        navigation.navigate('skills2',{skillId: skillId});
+        navigation.navigate('skills2-ngo',{skillId: skillId});
     }
 
     return (

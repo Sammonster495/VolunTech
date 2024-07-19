@@ -38,13 +38,13 @@ export default function Profile() {
         }, error => {
             console.log('Logout failed with exception:', { error });
         })
-        await SecureStore.deleteItemAsync('user');
+        await SecureStore.deleteItemAsync('ngo');
         await SecureStore.deleteItemAsync('expire');
         navigation.navigate('register');
     }
 
     useState(async() => {
-        const userData = await SecureStore.getItemAsync('user');
+        const userData = await SecureStore.getItemAsync('ngo');
         if(userData) {
         const user = JSON.parse(userData);
         setUser(user);
