@@ -22,7 +22,7 @@ export default function TabLayout() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.menubar} className="flex-row ">
+      <View style={styles.menubar}>
         <Text className="text-black text-center self-center">{name}</Text>
         <TouchableOpacity
          onPress={navigateToProfile}
@@ -76,10 +76,16 @@ const styles = StyleSheet.create({
   menubar: {
     height: 60, // Adjust based on your design
     width: '100%',
+    flexDirection: 'row',
     justifyContent:'flex-end',
     alignItems: 'flex-end',
     marginTop: 20,
     paddingHorizontal: 15,
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Offset of the shadow
+    shadowOpacity: 0.25, // Opacity of the shadow
+    shadowRadius: 3.84, // Radius of the shadow
+    elevation: 5
   },
   image:{
     height:61,
