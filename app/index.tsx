@@ -2,6 +2,7 @@ import { View, Animated, Easing } from "react-native";
 import { Svg, G, Rect, Path, Polygon } from "react-native-svg";
 import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
+import { CometChat } from "@cometchat-pro/react-native-chat";
 import { useEffect, useRef } from "react";
 import { useNavigation } from "expo-router";
 
@@ -68,8 +69,21 @@ export default function Index() {
       const ngo = await SecureStore.getItemAsync('ngo');
       const expire = await SecureStore.getItemAsync('expire');
       if(expire && (new Date(expire).getTime()) > (new Date().getTime())){
-        if(user) navigation.navigate('(user)');
-        else if (ngo) navigation.navigate('(ngo)');
+        if(user) {
+          await CometChat.login(JSON.parse(user).id, '4299e0d831a95ac942e00be380d1a4b18e480d9c').then(user => {
+            console.log('Login Successful:', { user });
+          }, error => {
+            console.log('Login failed with exception:', { error });
+          })
+          navigation.navigate('(user)');
+        }else if (ngo) {
+          await CometChat.login(JSON.parse(ngo).id, '4299e0d831a95ac942e00be380d1a4b18e480d9c').then(user => {
+            console.log('Login Successful:', { user });
+          }, error => {
+            console.log('Login failed with exception:', { error });
+          })
+          navigation.navigate('(ngo)');
+        }
       }else
         navigation.navigate('register');
     }, 7000);

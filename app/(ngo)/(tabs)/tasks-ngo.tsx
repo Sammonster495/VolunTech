@@ -1,12 +1,13 @@
 import { db } from "@/firebase/firebaseConfig";
 import * as SecureStore from 'expo-secure-store';
-import { collection, doc, getDoc, onSnapshot, updateDoc, increment, arrayUnion, addDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc, increment, arrayUnion, addDoc, query, where, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Modal, FlatList, Image, SafeAreaView, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
 import ProgressBar from "@/components/ProgressBar";
+import { CometChat } from "@cometchat-pro/react-native-chat";
 
 const mapping: {[key: string]: string} = {
     'rescue': 'Rescue',
@@ -34,6 +35,8 @@ export default function Tasks() {
     const [tasks, setTasks] = useState<{[key: string]: number|null}>({ medical: null, transport: null, rescue: null, finance: null, shelter: null, resource: null });
     const [userTasks, setUserTasks] = useState<any[]>([]);
     const [ngoTasks, setNgoTasks] = useState<any[]>([]);
+    const [groups, setGroups] = useState<any[]>([]);
+    const [selectedGroup, setSelectedGroup] = useState<any>(null);
 
     useEffect(() => {
       const fetchUserData = async () => {
@@ -221,6 +224,25 @@ export default function Tasks() {
     }
   }, [userloading, user])
 
+  useEffect(() => {
+    if(!userloading && user) {
+      const unsubscribe = onSnapshot(collection(db, 'groups'), async(snapshot) => {
+          snapshot.docs.map(doc => {
+              const group = doc.data();
+              if (group.ngo['id'] === user.type['id']) {
+                  setGroups(prevGroups => {
+                      if (prevGroups.findIndex(i => i.guid === doc.data().guid) === -1)
+                          return [...prevGroups, group];
+                      return prevGroups;
+                  })
+              }
+          })
+      })
+
+      return () => unsubscribe();
+    }
+  }, [userloading, user])
+
     const timestampToDate = (timestamp: { seconds: number; nanoseconds: number; }) => {
         const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
         const year = date.getFullYear();
@@ -247,7 +269,6 @@ export default function Tasks() {
     };
 
     const confirmAction = async () => {
-      setLoading(true);
       if (selectedAction?.id) {
         const reportRef = doc(db, 'reports', selectedAction.id);
         await updateDoc(reportRef, {
@@ -272,10 +293,8 @@ export default function Tasks() {
         if (details) {
             const { lat, lng } = details.geometry.location;
             try {
-                const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyBqeTB4Vbev342dA6b4PWZf-H3S1QTZyrM`);
-                const data = await response.json();
                 const locationData = {
-                    address: data.results[0]?.formatted_address || 'Unknown location',
+                    address: data.description || 'Unknown location',
                     latitude: lat,
                     longitude: lng
                 };
@@ -289,12 +308,14 @@ export default function Tasks() {
     };
 
     const handleCreateTask = async () => {
-        if (taskLocation && taskDescription && Object.values(tasks).some(value => value !== null)) {
+        if (taskLocation && taskDescription && selectedGroup && Object.values(tasks).some(value => value !== null)) {
+            setLoading(true);
             const userDocRef = doc(db, 'users', user.id);
             const requiredPersonnel = Object.fromEntries(Object.entries(tasks).filter(([key, value]) => value !== null))
             const volunteeredPersonnel = Object.fromEntries(Object.entries(requiredPersonnel).map(([key, value]) => [key, 0]))
             const reportDocRef = await addDoc(collection(db, 'tasks'), {
                 id: null,
+                group: { guid: selectedGroup.guid, name: selectedGroup.name },
                 createdBy: { id: user.id, name: user.name, ngo: user.type },
                 incident: selectIncident ? { id: selectIncident.id, description: selectIncident.description } : null,
                 location: {latitude: taskLocation.latitude, longitude: taskLocation.longitude, address: taskLocation.address},
@@ -312,8 +333,10 @@ export default function Tasks() {
             });
             setTaskDescription('');
             setTasks({ medical: null, transport: null, rescue: null, finance: null, shelter: null, resource: null });
-            setTaskLocation(undefined);
+            setTaskLocation(null);
+            setSelectedIncidents(null);
             setCreateTask(false);
+            setLoading(false);
         }else
             alert('Please fill all the required fields');
     }
@@ -361,6 +384,16 @@ export default function Tasks() {
                     }
                     return prevTasks;
                 })
+                CometChat.joinGroup(task.group.guid).then(async() => {
+                    const member = new CometChat.GroupMember(user.id, CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT);
+                    const q = query(collection(db, 'groups'), where('guid', '==', task.group.guid));
+                    const querySnapshot = await getDocs(q);
+                    if(!querySnapshot.empty){
+                        updateDoc(doc(db, 'groups', querySnapshot.docs[0].id), {
+                            members: [...querySnapshot.docs[0].data().members, {id: user.id, name: user.name}]
+                        })
+                    }
+                })
                 setLoading(false);
             }
         } catch (error) {
@@ -381,7 +414,7 @@ export default function Tasks() {
 
     return (
       <GestureHandlerRootView>
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#f6ffe2', marginBottom: 70 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#f6ffe2' }} className="mb-[19.4%]">
       <View style={{ flex: 1, width: "100%" }}>
           <View className="flex-row pt-2 ">
               <TouchableOpacity className="w-1/2 flex-col" onPress={() => setCategory(true)}>
@@ -482,7 +515,7 @@ export default function Tasks() {
                           )}
                       />
                   )}
-
+                    {!(pendingReports.length > 0) && !(verifiedReports.length > 0) && <View><Text className="text-center text-4xl text-[#134006] my-[60%]">No incidents reported or verified</Text></View>}
               </View>
           )}
           {category && (
@@ -496,13 +529,14 @@ export default function Tasks() {
                     keyExtractor={(item, index) => item.id.toString()}
                     renderItem={({ item }) => (
                         <View style={{display: 'flex', backgroundColor: '#234006', width: "90%", justifyContent: 'center', borderRadius: 20, marginVertical: 10, paddingBottom: 10}} className="self-center">
-                            <View style={{flexDirection: 'row', alignItems: 'center', height: 60, width: 270, paddingLeft: 25, paddingTop: 10,}}>
+                            <View style={{flexDirection: 'row', alignItems: 'center', width: 270, paddingLeft: 25, paddingTop: 10,}}>
                                 <Image 
                                     style={{height: 54,width: 54,marginRight: 7,}}
                                     source={require('@/assets/images/profile.png')}
                                 />
                                 <View>
-                                    <Text style={{fontSize:16,color:'#ffffff',marginBottom:3}}>{item.description} ({item?.createdBy['ngo']['name']})</Text>
+                                    <Text style={{fontSize:16,color:'#ffffff',marginBottom:3, marginRight: 10}}>{item.description}</Text>
+                                    <Text style={{fontSize:16,color:'#ffffff',marginBottom:3, marginRight: 10}}>({item?.createdBy['ngo']['name']})</Text>
                                 </View>
                             </View>
                             <View className="flex-row px-5">
@@ -521,6 +555,7 @@ export default function Tasks() {
                         </View>
                     )}
                 />}
+                {!(userTasks.length > 0) && !(ngoTasks.length > 0) && <View className="flex-1"><Text className="text-center text-4xl text-[#134006] my-[60%]">No tasks uploaded</Text></View>}
               </View>
           )}
       </View>
@@ -571,6 +606,16 @@ export default function Tasks() {
                                     {incidents.map(incident => <Picker.Item label={incident.description} value={incident} key={incident.id} />)}
                                 </Picker>
                             </View>
+                            <View className="flex overflow-hidden self-center items-center justify-center bg-[#e6ffaf] rounded-3xl h-12 w-[95%] mb-1">
+                                <Picker
+                                    selectedValue={selectedGroup}
+                                    onValueChange={(itemValue, itemIndex) => setSelectedGroup(itemValue)}
+                                    style={{ backgroundColor: '#e6ffaf', width: "90%", justifyContent: 'center' }}
+                                >
+                                    <Picker.Item label="Group Chat" value="" />
+                                    {groups.map(group => <Picker.Item label={group.name} value={group} key={group.guid} />)}
+                                </Picker>
+                            </View>
                             <View className="self-center w-[95%] items-center bg-[#e6ffaf] justify-center rounded-3xl mb-1">
                               <GooglePlacesAutocomplete
                                   placeholder='Location...'
@@ -591,9 +636,6 @@ export default function Tasks() {
                             <View className="self-center h-12 flex justify-center w-[95%] bg-[#e6ffaf] rounded-3xl px-8 mb-1">
                                   <TextInput placeholder="Description of the task" className="text-[16px]" value={taskDescription} onChangeText={text => setTaskDescription(text)} />
                             </View>
-                            <View className="self-center h-12 flex justify-center w-[95%] bg-[#e6ffaf] rounded-3xl mb-1">
-                                  <Text className="w-full text-[16px] pl-7">Number of volunteers needed</Text>
-                            </View>
                             <View className="mb-2">
                                 {[{ name: 'Medical', value: 'medical' }, { name: 'Transport', value: 'transport' }, { name: 'Rescue', value: 'rescue' }, { name: 'Finance', value: 'finance' }, { name: 'Shelter Building', value: 'shelter' }, { name: 'Resource Allocation', value: 'resource' }].map(task => (
                                   <View className="flex-row h-9 justify-around mt-1">
@@ -604,7 +646,10 @@ export default function Tasks() {
                             </View>
                             <View className="flex-row w-[90%] justify-around self-center mt-2 h-8">
                                 <TouchableOpacity className="bg-black w-20 rounded-full" onPress={() => setCreateTask(false)}><Text className="text-white text-xl text-center">Cancel</Text></TouchableOpacity>
-                                <TouchableOpacity className="bg-black w-20 rounded-full" onPress={() => handleCreateTask()}><Text className="text-white text-xl text-center">Create</Text></TouchableOpacity>
+                                <TouchableOpacity className="bg-black w-20 rounded-full" onPress={() => handleCreateTask()}>
+                                    {!loading && <Text className="text-white text-xl text-center">Create</Text>}
+                                    {loading && <ActivityIndicator color="white" size="large" />}
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>

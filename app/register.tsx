@@ -8,6 +8,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SecureStore from 'expo-secure-store';
 import { doc, getDoc } from "firebase/firestore";
+import { CometChat } from "@cometchat-pro/react-native-chat";
 import { useEffect } from "react";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -37,6 +38,11 @@ export default function Register() {
                         const userData = userDoc.data();
                         const page = userData.type === 'normal' ? '(user)' : '(ngo)';
                         const role = userData.type === 'normal' ? 'user' : 'ngo';
+                        await CometChat.login(userData.id, '4299e0d831a95ac942e00be380d1a4b18e480d9c').then(user => {
+                            console.log('Login Successful:', { user });
+                        }, error => {
+                            console.log('Login failed with exception:', { error });
+                        })
                         await SecureStore.setItemAsync(role, JSON.stringify({
                             id: userData.id,
                             image: result.user.photoURL,

@@ -15,6 +15,7 @@ import { STATE_DISTRICTS as places } from "@/data/area";
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { useNavigation } from "expo-router";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { CometChat } from "@cometchat-pro/react-native-chat";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -52,6 +53,9 @@ export default function Login() {
 
                     if (!userDoc.exists()) {
                         if (register) {
+                            const chatUser = new CometChat.User(result.user.uid);
+                            name && chatUser.setName(name);
+                            result.user.photoURL && chatUser.setAvatar(result.user.photoURL);
                             if(selectType === 'normal') {
                                 await setDoc(userDocRef, {
                                     id: userDocRef.id,
@@ -63,6 +67,15 @@ export default function Login() {
                                     type: selectType,
                                     registeredTasks: []
                                 });
+                                await CometChat.createUser(chatUser, '4299e0d831a95ac942e00be380d1a4b18e480d9c').then(async(user) => {
+                                    await CometChat.login(result.user.uid, '4299e0d831a95ac942e00be380d1a4b18e480d9c').then(async(user) => {
+                                        console.log('Login Successful:', { user });
+                                    }, error => {
+                                        console.log("Login failed with exception:", { error });
+                                    })
+                                }, error => {
+                                    console.log("User creation failed with exception:", error);
+                                })
                                 let proofUrl: string;
                                 if(proof?.name) {
                                     proofUrl = await uploadFile(proof, `/users/proof/${userDocRef.id}`);
@@ -78,7 +91,7 @@ export default function Login() {
                                     state: selectState,
                                     district: selectDistrict,
                                     skill: selectSkill,
-                                    type: selectType
+                                    type: selectType,
                                 }));
                                 await SecureStore.setItemAsync('expire', expirationTime);
                                 navigation.navigate('(user)');
@@ -110,6 +123,15 @@ export default function Login() {
                                         type: { id: ngoDocRef?.id, name: selectNgo },
                                         designation: querySnapshotH.empty ? 'member' : 'head'
                                     });
+                                    await CometChat.createUser(chatUser, '4299e0d831a95ac942e00be380d1a4b18e480d9c').then(async(user) => {
+                                        await CometChat.login(result.user.uid, '4299e0d831a95ac942e00be380d1a4b18e480d9c').then(async(user) => {
+                                            console.log('Login Successful:', { user });
+                                        }, error => {
+                                            console.log("Login failed with exception:", { error });
+                                        })
+                                    }, error => {
+                                        console.log("User creation failed with exception:", error);
+                                    })
                                     let proofUrl: string;
                                     if(proof?.name){
                                         proofUrl = await uploadFile(proof, `/users/proof/${userDocRef.id}`);

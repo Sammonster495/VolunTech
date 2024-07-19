@@ -2,8 +2,9 @@ import { Text, View, StyleSheet, SafeAreaView, Image, FlatList, TouchableOpacity
 import * as SecureStore from 'expo-secure-store';
 import ProgressBar from "@/components/ProgressBar";
 import { useEffect, useState } from "react";
-import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, onSnapshot, query, queryEqual, updateDoc, where } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
+import { CometChat } from "@cometchat-pro/react-native-chat";
 
 const mapping: {[key: string]: string} = {
     'rescue': 'Rescue',
@@ -118,6 +119,16 @@ export default function Tasks() {
                     }
                     return prevTasks;
                 })
+                CometChat.joinGroup(task.group.guid).then(async() => {
+                    const member = new CometChat.GroupMember(user.id, CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT);
+                    const q = query(collection(db, 'groups'), where('guid', '==', task.group.guid));
+                    const querySnapshot = await getDocs(q);
+                    if(!querySnapshot.empty){
+                        updateDoc(doc(db, 'groups', querySnapshot.docs[0].id), {
+                            members: [...querySnapshot.docs[0].data().members, {id: user.id, name: user.name}]
+                        })
+                    }
+                })
                 setLoading(false);
             }
         } catch (error) {
@@ -138,11 +149,11 @@ export default function Tasks() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container} className="mb-[19.4%]">
             <View style={styles.content}>
                 <Text style={styles.header}>Tasks Allocation</Text>
             </View>
-            {tasks && <FlatList
+            {tasks.length > 0 ? <FlatList
                 style={styles.list}
                 data={tasks}
                 keyExtractor={(item) => item.id.toString()}
@@ -154,7 +165,8 @@ export default function Tasks() {
                                 source={require('@/assets/images/profile.png')}
                             />
                             <View>
-                                <Text style={{fontSize:16,color:'#ffffff',marginBottom:3}}>{item.description} ({item?.createdBy['ngo']['name']})</Text>
+                                <Text style={{fontSize:16,color:'#ffffff',marginBottom:3, marginRight: 10}}>{item.description}</Text>
+                                <Text style={{fontSize:16,color:'#ffffff',marginBottom:3, marginRight: 10}}>({item?.createdBy['ngo']['name']})</Text>
                             </View>
                         </View>
                         <View className="flex-row px-5">
@@ -172,7 +184,7 @@ export default function Tasks() {
                         </View>
                     </View>
                 )}
-            />}
+            /> : <View className="flex-1"><Text className="text-center text-4xl text-[#134006] my-[60%]">No tasks uploaded</Text></View>}
         </SafeAreaView>
     );
 }
@@ -181,7 +193,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f6ffe2',
-        marginBottom: 70
     },
     content: {
         justifyContent: 'center',
