@@ -9,7 +9,7 @@ export default function Chats1() {
 
     async function handleSignout() {
         await signOut(auth);
-        await SecureStore.deleteItemAsync('user');
+        await SecureStore.deleteItemAsync('ngo');
         await SecureStore.deleteItemAsync('expire');
         navigation.navigate('register');
     }
@@ -18,6 +18,7 @@ export default function Chats1() {
         <View style={styles.container}>
             <Text>Chats</Text>
             <Button title="Sign Out" onPress={handleSignout} />
+            <Button title="Navigate" onPress={() => navigation.navigate('chats2-ngo')} />
         </View>
     )
 }

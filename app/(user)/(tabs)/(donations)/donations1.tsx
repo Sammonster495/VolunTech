@@ -50,9 +50,9 @@ function donations2() {
                 <FlatList
                 data={Data}
                 renderItem={({item}) => <TouchableOpacity
-                                         style={styles.element}
-                                         onPress={() => navigation.navigate('donations2')}>
-                                             <Text style={styles.showText}>{item.title}</Text>
+                                            style={styles.element}
+                                            onPress={() => navigation.navigate('donations2')}>
+                                                <Text style={styles.showText}>{item.title}</Text>
                                         </TouchableOpacity>}
                 style={styles.list}
                 />

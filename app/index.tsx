@@ -1,6 +1,7 @@
 import { View, Animated, Easing } from "react-native";
 import { Svg, G, Rect, Path, Polygon } from "react-native-svg";
 import * as SecureStore from 'expo-secure-store';
+import * as Location from 'expo-location';
 import { useEffect, useRef } from "react";
 import { useNavigation } from "expo-router";
 
@@ -64,12 +65,26 @@ export default function Index() {
 
     setTimeout(async () => {
       const user = await SecureStore.getItemAsync('user');
+      const ngo = await SecureStore.getItemAsync('ngo');
       const expire = await SecureStore.getItemAsync('expire');
-      if(user && expire && new Date(expire) > new Date())
-        navigation.navigate('(user)');
-      else
+      if(expire && (new Date(expire).getTime()) > (new Date().getTime())){
+        if(user) navigation.navigate('(user)');
+        else if (ngo) navigation.navigate('(ngo)');
+      }else
         navigation.navigate('register');
     }, 7000);
+  }, []);
+
+  const requestLocationsPermission = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Location permission is required to use this app')
+      return;
+    }
+  }
+
+  useEffect(() => {
+    requestLocationsPermission();
   }, []);
 
   return (
