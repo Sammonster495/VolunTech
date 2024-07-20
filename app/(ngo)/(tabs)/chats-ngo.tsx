@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import * as SecureStore from 'expo-secure-store';
 import { CometChat } from "@cometchat-pro/react-native-chat";
-import { ActivityIndicator, Button, Image, Modal, SafeAreaView, ScrollView, Text, TextInput, Touchable, TouchableOpacity, View } from "react-native";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { ActivityIndicator, Button, Image, Modal, SafeAreaView, ScrollView, Text, TextInput, Touchable, TouchableOpacity, View, StyleSheet } from "react-native";
+import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
+
+const mapping: {[key: string]: string} = {
+    'rescue': 'Rescue',
+    'medical': 'Medical',
+    'resource': 'Resource Allocation',
+    'finance': 'Finance',
+    'transport': 'Transport',
+    'shelter': 'Shelter Building',
+}
 
 export default function ChatsHome() {
     const [user, setUser] = useState<any>(null);
@@ -14,6 +23,8 @@ export default function ChatsHome() {
     const [chatGroup, setChatGroup] = useState<any>(null);
     const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
     const [chatGroupInfo, setChatGroupInfo] = useState<any>(null);
+    const [showUserInfo, setShowUserInfo] = useState<boolean>(false);
+    const [userInfo, setUserInfo] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [chatGroupMembers, setChatGroupMembers] = useState<any[]>([]);
     const [conversations, setConversations] = useState<any[]>([]);
@@ -221,6 +232,18 @@ export default function ChatsHome() {
         }
     };
 
+    const handleShowUserInfo = async(id: string) => {
+        onSnapshot(collection(db, 'users'), snapshot => {
+            snapshot.docs.forEach(doc => {
+                const docId = doc.id.toLowerCase();
+                if(docId === id) {
+                    setUserInfo(doc.data());
+                    setShowUserInfo(true);
+                }
+            })
+        })
+    }
+
     return (
         <SafeAreaView style={{ backgroundColor: '#f6ffe2', flex: 1, position: 'relative' }} className="mb-[19.4%]">
             {user?.designation === 'head' && <TouchableOpacity className="bg-[#83a638] w-10 h-10 rounded-full absolute bottom-5 right-5 z-40" onPress={() => setCreateGroup(true)}><Text className="text-5xl text-center">+</Text></TouchableOpacity>}
@@ -360,7 +383,7 @@ export default function ChatsHome() {
                         <Text className="text-2xl text-[#e6ffaf] mb-3">Members</Text>
                         {chatGroupMembers && chatGroupMembers.reverse().map((member: any) => (
                             <View className="flex-row mb-2">
-                                <Image source={{ uri: member.avatar }} className="h-12 w-12 rounded-full self-center" />
+                                <TouchableOpacity onPress={() => handleShowUserInfo(member.uid)}><Image source={{ uri: member.avatar }} className="h-12 w-12 rounded-full self-center" /></TouchableOpacity>
                                 <Text key={member.uid} className="text-lg w-3/5 ml-3 self-center">{member.name}</Text>
                                 <Text className="text-lg text-[#e6ffaf] self-center">{member.scope === 'admin' && 'Admin'}</Text>
                             </View>
@@ -368,6 +391,171 @@ export default function ChatsHome() {
                     </View>
                 </ScrollView>}
             </Modal>
+            <Modal
+                animationType="slide"
+                visible={showUserInfo}
+                onRequestClose={() => setShowUserInfo(false)}
+            >
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                        {userInfo && <View style={styles.profile}>
+                        <Image
+                            style={styles.profileImage}
+                            source={{ uri: userInfo?.image }}
+                        />
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.name}>Name: {userInfo.name}</Text>
+                            <Text style={[styles.skill, { color: '#1E1E1E' }]}>Skill: {mapping[userInfo.skill]}</Text>
+                            <View style={styles.statusContainer}>
+                                <Text style={styles.statusText}>Status:</Text>
+                                <Text>{userInfo.status ? userInfo.status : '-'}</Text>
+                            </View>
+                        </View>
+                    </View>}
+                    {userInfo && <View style={styles.additionalInfo}>
+                        <Text style={styles.sectionTitle}>Additional Information</Text>
+                        <View style={styles.infoItem}>
+                            <Text style={styles.infoLabel}>Contact Number</Text>
+                            <Text style={styles.infoText}>{`91+ ${userInfo.phone}`}</Text>
+                        </View>
+                        <View style={styles.infoItem}>
+                            <Text style={styles.infoLabel}>Availability</Text>
+                            <Text style={styles.infoText}>{userInfo.availability ? userInfo.availability : '-'}</Text>
+                        </View>
+                        <View style={styles.infoItem}>
+                            <Text style={styles.infoLabel}>Profession</Text>
+                            <Text style={styles.infoText}>{userInfo.profession ? userInfo.profession : '-'}</Text>
+                        </View>
+                        <View style={styles.infoItem}>
+                            <Text style={styles.infoLabel}>Experience</Text>
+                            <Text style={styles.infoText}>{userInfo.experience ? userInfo.experience : '-'}</Text>
+                        </View>
+                        {userInfo.type !== 'normal' && <View style={styles.infoItem}>
+                            <Text style={styles.infoLabel}>NGO</Text>
+                                <Text style={styles.infoText}>{user.type.name}</Text>
+                        </View>}
+                    </View>}
+                </View>
+            </Modal>
         </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+    header: {
+        flexDirection:'row',
+        justifyContent:'space-between',
+        backgroundColor: '#83A638',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+    },
+    headerText: {
+        fontSize: 36,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+    profile: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 10,
+        marginHorizontal: 10,
+        marginTop: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+        width: "90%"
+    },
+    profileImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        marginRight: 10,
+    },
+    name: {
+        fontSize: 17,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    skill: {
+        fontSize: 16,
+        color: '#333',
+    },
+    statusContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 5,
+    },
+    statusText: {
+        fontSize: 16,
+        color: '#333',
+        marginRight: 10,
+    },
+    picker: {
+        height: 40,
+        width: 150,
+    },
+    backButton: {
+        alignSelf: 'center',
+        marginTop: 20,
+        padding: 10,
+        backgroundColor: '#83A638',
+        borderRadius: 5,
+    },
+    backButtonText: {
+        height:30,
+        width:30,
+        tintColor: '#fff',
+    },
+    additionalInfo: {
+        padding: 15,
+        width: "90%",
+        position: 'relative',
+        marginTop: 10,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    infoItem: {
+        flexDirection: 'row',
+        marginBottom: 8,
+    },
+    infoLabel: {
+        fontWeight: 'bold',
+        marginRight: 5,
+        width: "33%",
+        alignSelf: 'center' // Adjust width as needed
+    },
+    infoText: {
+        flex:1,
+        flexWrap:'wrap',
+        alignSelf: 'center'
+    },
+    signOutButton: {
+        height:35,
+        width:70,
+        alignSelf: 'center',
+        margin:20,
+        padding:5,
+        backgroundColor:'#83A638',
+        borderRadius: 7,
+    },
+    signOutText: {
+        alignSelf: 'center',
+        color:'white',
+        padding:'auto'
+    }
+});

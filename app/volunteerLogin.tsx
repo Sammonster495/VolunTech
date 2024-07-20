@@ -59,6 +59,7 @@ export default function Login() {
                             if(selectType === 'normal') {
                                 await setDoc(userDocRef, {
                                     id: userDocRef.id,
+                                    image: result.user.photoURL,
                                     name: name,
                                     phone: phone,
                                     state: selectState,
@@ -111,6 +112,7 @@ export default function Login() {
                                 }else {
                                     await setDoc(userDocRef, {
                                         id: userDocRef.id,
+                                        image: result.user.photoURL,
                                         name: name,
                                         phone: phone,
                                         state: selectState,
