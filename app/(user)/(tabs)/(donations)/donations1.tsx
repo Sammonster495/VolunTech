@@ -67,28 +67,29 @@ const styles = StyleSheet.create({
     },
     content:{
         justifyContent:'center',
-        backgroundColor:'#1E1E1E',
+        backgroundColor:'#f6ffe2',
         padding:25
     },
     header:{
         fontSize:36,
-        color:'#74A608',
+        color:'#627F00',
         justifyContent:'center',
         marginBottom:10
     },
     text:{
-        color:'#FFFFFF',
+        color:'#809B6B',
         fontSize: 16
     },
     list:{
         width:428,
         height:460,
-        backgroundColor:'#1E1E1E',
+        backgroundColor:'#f6ffe2',
     },
     element:{
-        width:360,
+        width:350,
         height:75,
-        backgroundColor:'#83A638',
+        backgroundColor:'#627F00',
+        borderRadius:10,
         justifyContent: 'center',
         alignItems: 'flex-start',
         alignContent: 'center',
