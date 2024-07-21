@@ -95,6 +95,7 @@ export default function Login() {
                                     type: selectType,
                                 }));
                                 await SecureStore.setItemAsync('expire', expirationTime);
+                                await SecureStore.setItemAsync('mode','light');
                                 navigation.navigate('(user)');
                             }else if(selectType === 'ngo') {
                                 const ngoQuery = query(collection(db, 'ngo'), where('name', '==', selectNgo));
@@ -153,6 +154,7 @@ export default function Login() {
                                         designation: querySnapshotH.empty ? 'member' : 'head'
                                     }));
                                     await SecureStore.setItemAsync('expire', expirationTime);
+                                    await SecureStore.setItemAsync('mode','light');
                                     navigation.navigate('(ngo)');
                                 }
                             }

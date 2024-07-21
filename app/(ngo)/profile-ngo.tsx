@@ -1,5 +1,5 @@
 import { useNavigation } from "expo-router";
-import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity, ActivityIndicator, Switch } from "react-native";
 import React, { useCallback, useEffect, useState } from 'react';
 import { Picker } from "@react-native-picker/picker";
 import { signOut } from "firebase/auth";
@@ -8,6 +8,7 @@ import * as SecureStore from 'expo-secure-store';
 import { CometChat } from "@cometchat-pro/react-native-chat";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
+import { useTheme } from "@/theme/ThemeContext";
 
 const mapping: {[key: string]: string} = {
     'rescue': 'Rescue',
@@ -28,6 +29,8 @@ export default function Profile() {
     const [experience, setExperience] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { theme , toggleTheme } = useTheme();
+    const styles = createStyles(theme);
 
     async function handleSignout(){
         await signOut(auth);
@@ -95,7 +98,7 @@ export default function Profile() {
 
     return (
         <GestureHandlerRootView>
-            <SafeAreaView style={{ flex: 1}}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: theme === 'dark' ? '#161616' : '#f0f0f0'}}>
             {user && <View style={styles.profile}>
                 <Image
                     style={styles.profileImage}
@@ -103,7 +106,7 @@ export default function Profile() {
                 />
                 <View style={{ flex: 1 }}>
                     <Text style={styles.name}>Name: {user.name}</Text>
-                    <Text style={[styles.skill, { color: '#1E1E1E' }]}>Skill: {mapping[user.skill]}</Text>
+                    <Text style={[styles.skill,]}>Skill: {mapping[user.skill]}</Text>
                     <View style={styles.statusContainer}>
                         <Text style={styles.statusText}>Status:</Text>
                         <Picker
@@ -111,15 +114,15 @@ export default function Profile() {
                             style={styles.picker}
                             onValueChange={(itemValue) => editStatus(itemValue)}
                         >
-                            <Picker.Item label="Part-Time" value="Part-Time"/>
-                            <Picker.Item label="Full-Time" value="Full-Time"/>
+                            <Picker.Item style={{color: theme === 'dark' ? '#74A608':'#1E1E1E'}} label="Part-Time" value="Part-Time"/>
+                            <Picker.Item style={{color: theme === 'dark' ? '#74A608':'#1E1E1E'}} label="Full-Time" value="Full-Time"/>
                         </Picker>
                     </View>
                 </View>
             </View>}
             {user && <View style={styles.additionalInfo}>
                 <Text style={styles.sectionTitle}>Additional Information</Text>
-                <TouchableOpacity style={{ position: 'absolute', right: 15, top: 20 }} onPress={() => setIsEditing(true)}><Image source={require('@/assets/images/edit.png')} /></TouchableOpacity>
+                <TouchableOpacity style={{ position: 'absolute', right: 15, top: 20 }} onPress={() => setIsEditing(true)}><Image style={{tintColor: theme === 'dark' ? 'white' : 'black'}} source={require('@/assets/images/edit.png')} /></TouchableOpacity>
                 <View style={styles.infoItem}>
                     <Text style={styles.infoLabel}>Contact Number</Text>
                     {isEditing ? (
@@ -163,6 +166,10 @@ export default function Profile() {
                     </TouchableOpacity>
                 )}
             </View>}
+            <View style={styles.switchContainer}>
+                    <Text style={styles.switchLabel}>Dark Mode</Text>
+                    <Switch value={theme === 'dark'} onValueChange={toggleTheme} />
+            </View>
             <TouchableOpacity
              style={styles.signOutButton}
              onPress={handleSignout}>
@@ -173,29 +180,16 @@ export default function Profile() {
     );
 }
 
-const styles = StyleSheet.create({
-    header: {
-        flexDirection:'row',
-        justifyContent:'space-between',
-        backgroundColor: '#83A638',
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-        alignItems: 'center',
-    },
-    headerText: {
-        fontSize: 36,
-        fontWeight: 'bold',
-        color: '#fff',
-    },
+const createStyles = (theme: string) => StyleSheet.create({
     profile: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: theme === 'dark' ? '#2D2D2D' : '#f0f0f0',
         borderRadius: 10,
         marginHorizontal: 10,
         marginTop: 10,
-        shadowColor: '#000',
+        shadowColor: theme === 'dark'?'#fff':'#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
@@ -211,10 +205,11 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         marginBottom: 5,
+        color: theme === 'dark' ? '#74A608' :'#1E1E1E',
     },
     skill: {
         fontSize: 16,
-        color: '#333',
+        color: theme === 'dark' ? '#74A608' :'#1E1E1E',
     },
     statusContainer: {
         flexDirection: 'row',
@@ -223,33 +218,21 @@ const styles = StyleSheet.create({
     },
     statusText: {
         fontSize: 16,
-        color: '#333',
+        color: theme === 'dark' ? '#74A608' :'#1E1E1E',
         marginRight: 10,
     },
     picker: {
         height: 40,
         width: 150,
     },
-    backButton: {
-        alignSelf: 'center',
-        marginTop: 20,
-        padding: 10,
-        backgroundColor: '#83A638',
-        borderRadius: 5,
-    },
-    backButtonText: {
-        height:30,
-        width:30,
-        tintColor: '#fff',
-    },
     additionalInfo: {
         padding: 15,
         position: 'relative',
         marginTop: 10,
-        backgroundColor: '#fff',
+        backgroundColor: theme === 'dark' ? '#2D2D2D' : '#f0f0f0',
         borderRadius: 10,
         marginHorizontal: 10,
-        shadowColor: '#000',
+        shadowColor: theme === 'dark'?'#fff':'#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
@@ -260,6 +243,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         textAlign: 'center',
+        color: theme === 'dark' ? '#74A608' :'#1E1E1E',
     },
     infoItem: {
         flexDirection: 'row',
@@ -269,12 +253,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginRight: 5,
         width: "33%",
+        color: theme === 'dark' ? '#74A608' :'#1E1E1E',
         alignSelf: 'center' // Adjust width as needed
     },
     infoText: {
         flex:1,
         flexWrap:'wrap',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        color: theme === 'dark' ? '#74A608' :'#1E1E1E',
     },
     signOutButton: {
         height:35,
@@ -289,5 +275,18 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         color:'white',
         padding:'auto'
-    }
+    },
+    switchContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal:10,
+        paddingVertical:4,
+        backgroundColor: theme === 'dark' ? '#161616' : '#f0f0f0',
+    },
+    switchLabel: {
+        fontSize: 16,
+        marginRight: 10,
+        color: theme === 'dark' ? 'white' : 'black',
+    },
 });

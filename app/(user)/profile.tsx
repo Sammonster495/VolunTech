@@ -45,6 +45,8 @@ export default function Profile() {
 
     const fetchUserData = useCallback(async () => {
         const userData = await SecureStore.getItemAsync('user');
+        // const themeMode = await SecureStore.getItemAsync('mode');
+        // console.log(themeMode);
         if (userData) {
             const user = JSON.parse(userData);
             setUser(user);

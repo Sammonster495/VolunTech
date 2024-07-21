@@ -55,6 +55,7 @@ export default function Register() {
                             designation: role === 'ngo' ? userData.designation : null
                         }));
                         await SecureStore.setItemAsync('expire', expirationTime);
+                        await SecureStore.setItemAsync('mode','light');
                         navigation.navigate(page);
                     }
                 } catch (error) {
