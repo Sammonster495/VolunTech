@@ -2,8 +2,10 @@ import { Link, Tabs, useNavigation } from "expo-router";
 import { useState } from "react";
 import * as SecureStore from 'expo-secure-store';
 import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import { useTheme } from "@/theme/ThemeContext";
 
 export default function TabLayout() {
+  const { theme } = useTheme();
   const [user, setUser] = useState<any>();
 
   useState(async() => {
@@ -16,11 +18,13 @@ export default function TabLayout() {
 
   const navigation = useNavigation();
 
+  const styles = createStyles(theme);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.menubar} className="flex-row mt-[5.6%]">
         <Image source={require('@/assets/images/logo-small.png')} className="h-[49] w-[56] my-1" />
-        <Text className="text-black text-right self-center mr-2 w-3/5">{user?.name}</Text>
+        <Text style={{color: theme === 'dark' ? 'white' : 'black'}} className="text-right self-center mr-2 w-3/5">{user?.name}</Text>
         <TouchableOpacity className="self-center"
          onPress={() => navigation.navigate('profile')}
         >
@@ -37,39 +41,39 @@ export default function TabLayout() {
           width: "100%",
           position: 'absolute',
           zIndex: 1,
-          backgroundColor: '#f6ffe2',
+          backgroundColor: theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
         },
-        tabBarActiveBackgroundColor: '#83a638',
+        tabBarActiveBackgroundColor:theme === 'light' ? '#83a638' : '#234006',
       })}>
         <Tabs.Screen name="(maps)" options={{
           headerShown: false,
-          tabBarIcon: () => <Image source={require('@/assets/images/maps.png')} />
+          tabBarIcon: () => <Image source={theme === 'light' ? require('@/assets/images/maps.png') : require('@/assets/images/maps-dark.png')}/>
         }} />
         <Tabs.Screen name="tasks" options={{
           headerShown: false,
-          tabBarIcon: () => <Image source={require('@/assets/images/tasks.png')} />
+          tabBarIcon: () => <Image source={theme === 'light' ? require('@/assets/images/tasks.png') : require('@/assets/images/tasks-dark.png')} />
         }} />
         <Tabs.Screen name="chats" options={{
           headerShown: false,
-          tabBarIcon: () => <Image source={require('@/assets/images/chats.png')} />
+          tabBarIcon: () => <Image source={theme === 'light' ? require('@/assets/images/chats.png') : require('@/assets/images/chats-dark.png')} />
         }} />
         <Tabs.Screen name="(skills)" options={{
           headerShown: false,
-          tabBarIcon: () => <Image source={require('@/assets/images/skills.png')} />
+          tabBarIcon: () => <Image source={theme === 'light' ? require('@/assets/images/skills.png') : require('@/assets/images/skills-dark.png')} />
         }} />
         <Tabs.Screen name="(donations)" options={{
           headerShown: false,
-          tabBarIcon: () => <Image source={require('@/assets/images/donations.png')} />
+          tabBarIcon: () => <Image source={theme === 'light' ? require('@/assets/images/donations.png') : require('@/assets/images/donations-dark.png')} />
         }} />
       </Tabs>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: string) => StyleSheet.create({
   container:{
     flex: 1,
-    backgroundColor: '#f6ffe2'
+    backgroundColor: theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
   },
   menubar: {
     height: 60, // Adjust based on your design
@@ -78,17 +82,12 @@ const styles = StyleSheet.create({
     justifyContent:'flex-end',
     alignItems: 'flex-end',
     paddingHorizontal: 15,
-    shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 2 }, // Offset of the shadow
-    shadowOpacity: 0.25, // Opacity of the shadow
-    shadowRadius: 3.84, // Radius of the shadow
-    elevation: 5
   },
   image:{
     height:46,
     width:46,
     borderWidth:1,
-    borderColor: 'white',
+    borderColor: theme === 'light' ? 'black' : 'white',
     borderRadius:30
   }
 })
