@@ -20,6 +20,7 @@
     "@expo-google-fonts/roboto-serif": "^0.2.3",
     "@expo/vector-icons": "^14.0.2",
     "@firebase/messaging": "^0.12.10",
+    "@mapbox/polyline": "^1.2.1",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/drawer": "^6.7.0",
@@ -74,6 +75,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/jest": "^29.5.12",
+    "@types/mapbox__polyline": "^1.0.5",
     "@types/react": "~18.2.45",
     "@types/react-test-renderer": "^18.0.7",
     "jest": "^29.2.1",

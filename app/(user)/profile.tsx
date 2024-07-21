@@ -285,7 +285,6 @@ const createStyles = (theme: string) => StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal:10,
         paddingVertical:4,
-        backgroundColor: theme === 'dark' ? '#161616' : '#f0f0f0',
     },
     switchLabel: {
         fontSize: 16,

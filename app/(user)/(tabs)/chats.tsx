@@ -1,9 +1,7 @@
-import { auth, db } from "@/firebase/firebaseConfig";
-import { useNavigation } from "expo-router";
-import { signOut } from "firebase/auth";
+import { db } from "@/firebase/firebaseConfig";
 import { onSnapshot } from "firebase/firestore";
 import * as SecureStore from 'expo-secure-store';
-import { Text, View, StyleSheet, Button, SafeAreaView, TouchableOpacity, Modal, TextInput, ScrollView, Image } from "react-native";
+import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity, Modal, TextInput, ScrollView, Image } from "react-native";
 import { CometChat } from "@cometchat-pro/react-native-chat";
 import { useEffect, useState } from "react";
 import { collection } from "firebase/firestore";
@@ -57,7 +55,6 @@ export default function Chats1() {
                     }
                 })
             })
-
             return () => unsubscribe();
         }
     })
