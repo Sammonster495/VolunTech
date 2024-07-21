@@ -4,12 +4,14 @@ import { arrayUnion, collection, doc, getDoc, onSnapshot, updateDoc } from "fire
 import { useEffect, useState } from "react"
 import * as SecureStore from 'expo-secure-store';
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { useTheme } from "@/theme/ThemeContext";
 
 export default function User() {
     const [pendingReports, setPendingReports] = useState<any[]>([]);
     const [verifiedReports, setVerifiedReports] = useState<any[]>([]);
     const [user, setUser] = useState<any>();
     const [loading, setLoading] = useState<boolean>(true);
+    const { theme } = useTheme();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -112,7 +114,19 @@ export default function User() {
             </View>
             <Stack>
                 <Stack.Screen name="(tabs)" options={{headerShown: false}} />
-                <Stack.Screen name="profile-ngo" options={{headerShown: true, headerTitle: "Profile", headerTitleStyle: { fontSize: 30 }, headerTitleAlign: 'center', headerStyle: { backgroundColor: '#83A638'}, headerTintColor: 'white' }} />
+                <Stack.Screen name="profile-ngo" options={{
+                    headerShown: true, 
+                    headerTitle: "Profile", 
+                    headerTintColor: theme === 'dark' ? '#83A638': '#1E1E1E',
+                    headerTitleStyle: { 
+                        fontSize: 30,
+                        color: theme === 'dark' ? '#83A638' : 'black',
+                    }, 
+                    headerTitleAlign: 'center', 
+                    headerStyle: { 
+                        backgroundColor: theme === 'dark' ? 'black' : '#83A638',
+                    }
+                }} />
             </Stack>
         </>
     )

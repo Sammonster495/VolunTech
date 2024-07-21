@@ -8,6 +8,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
 import ProgressBar from "@/components/ProgressBar";
 import { CometChat } from "@cometchat-pro/react-native-chat";
+import { useTheme } from "@/theme/ThemeContext";
 
 const mapping: {[key: string]: string} = {
     'rescue': 'Rescue',
@@ -37,6 +38,7 @@ export default function Tasks() {
     const [ngoTasks, setNgoTasks] = useState<any[]>([]);
     const [groups, setGroups] = useState<any[]>([]);
     const [selectedGroup, setSelectedGroup] = useState<any>(null);
+    const { theme } = useTheme();
 
     useEffect(() => {
       const fetchUserData = async () => {
@@ -414,16 +416,16 @@ export default function Tasks() {
 
     return (
       <GestureHandlerRootView>
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#f6ffe2' }} className="mb-[19.4%]">
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme === 'dark' ? '#1E1E1E' : '#f6ffe2'}} className="mb-[19.4%]">
       <View style={{ flex: 1, width: "100%" }}>
           <View className="flex-row pt-2 ">
               <TouchableOpacity className="w-1/2 flex-col" onPress={() => setCategory(true)}>
-                  <Text className="text-center text-xl">Tasks</Text>
-                  {category && <View className="bg-green-400 h-[2px]"></View>}
+                  <Text style={{color: theme === 'light' ? 'black' : 'white'}} className="text-center text-xl">Tasks</Text>
+                  {category && <View style={{backgroundColor:'light' ? '#4ade80' : '#74A608'}} className="h-[2px]"></View>}
               </TouchableOpacity>
               <TouchableOpacity className="w-1/2 flex-col" onPress={() => setCategory(false)}>
-                  <Text className="text-center text-xl">Notifications</Text>
-                  {!category && <View className="bg-green-400 h-[2px]"></View>}
+                  <Text style={{color: theme === 'light' ? 'black' : 'white'}} className="text-center text-xl">Notifications</Text>
+                  {!category && <View style={{backgroundColor:'light' ? '#4ade80' : '#74A608'}} className="h-[2px]"></View>}
               </TouchableOpacity>
           </View>
           {!category && (
@@ -515,13 +517,13 @@ export default function Tasks() {
                           )}
                       />
                   )}
-                    {!(pendingReports.length > 0) && !(verifiedReports.length > 0) && <View><Text className="text-center text-4xl text-[#134006] my-[60%]">No incidents reported or verified</Text></View>}
+                    {!(pendingReports.length > 0) && !(verifiedReports.length > 0) && <View><Text style={{color:theme === 'light' ? '#134006' : '#74A608'}} className="text-center text-4xl my-[60%]">No incidents reported or verified</Text></View>}
               </View>
           )}
           {category && (
               <View style={{ flex: 1, position: 'relative' }}> 
                 {user?.designation === 'head' &&
-                  <TouchableOpacity className="bg-[#83a638] w-10 h-10 rounded-full absolute bottom-5 right-5 z-40" onPress={() => setCreateTask(true)}><Text className="text-5xl text-center">+</Text></TouchableOpacity>
+                  <TouchableOpacity style={{backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}} className="w-10 h-10 rounded-full absolute bottom-5 right-5 z-40" onPress={() => setCreateTask(true)}><Text className="text-5xl text-center">+</Text></TouchableOpacity>
                 }
                 {(userTasks.length > 0 || ngoTasks.length > 0) && <FlatList
                     style={{flexGrow: 1}}
@@ -592,15 +594,15 @@ export default function Tasks() {
                 visible={createTask}
                 onRequestClose={() => setCreateTask(false)}
             >
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-                    <Text className="text-3xl text-center pb-3 text-[#e6ffaf]">Create Task</Text>
-                    <View style={{ width: "90%", backgroundColor: '#83a638', padding: 15, borderRadius: 10 }}>
-                        <View style={{ flexDirection: 'column', width: '100%' }} className="">
-                            <View className="flex overflow-hidden self-center items-center justify-center bg-[#e6ffaf] rounded-3xl h-12 w-[95%] mb-1">
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.8)' }}>
+                    <Text style={{color:theme === 'light' ? '#e6ffaf' : '#74A608'}} className="text-3xl text-center pb-3">Create Task</Text>
+                    <View style={{ width: "90%", backgroundColor:theme === 'light' ? '#83a638' : '#234006', padding: 15, borderRadius: 10 }}>
+                        <View style={{ flexDirection: 'column', width: '100%' }}>
+                            <View style={{backgroundColor:theme === 'light' ? '#e6ffaf' : '#E4FCB1'}} className="flex overflow-hidden self-center items-center justify-center rounded-3xl h-12 w-[95%] mb-1">
                                 <Picker
                                     selectedValue={selectIncident}
                                     onValueChange={(itemValue, itemIndex) => setSelectedIncidents(itemValue)}
-                                    style={{ backgroundColor: '#e6ffaf', width: "90%", justifyContent: 'center' }}
+                                    style={{ backgroundColor:theme === 'light' ? '#e6ffaf' : '#E4FCB1', width: "90%", justifyContent: 'center' }}
                                 >
                                     <Picker.Item label="Incident(Optional)" value="" />
                                     {incidents.map(incident => <Picker.Item label={incident.description} value={incident} key={incident.id} />)}
@@ -639,7 +641,7 @@ export default function Tasks() {
                             <View className="mb-2">
                                 {[{ name: 'Medical', value: 'medical' }, { name: 'Transport', value: 'transport' }, { name: 'Rescue', value: 'rescue' }, { name: 'Finance', value: 'finance' }, { name: 'Shelter Building', value: 'shelter' }, { name: 'Resource Allocation', value: 'resource' }].map(task => (
                                   <View className="flex-row h-9 justify-around mt-1">
-                                    <Text className="w-1/2 self-center">{task.name}</Text>
+                                    <Text style={{color:theme === 'light' ? 'black' : 'white'}} className="w-1/2 self-center">{task.name}</Text>
                                     <TextInput placeholder="" keyboardType="phone-pad" value={tasks[task.value]?.toString()} key={task.value} className="w-1/5 bg-[#e6ffaf] rounded-3xl px-3 text-center" onChangeText={text => setTasks(prevTasks => ({ ...prevTasks, [task.value]: parseInt(text, 10) || null}))} />
                                 </View>
                                 ))}
