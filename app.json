@@ -11,10 +11,9 @@
       "ios",
       "android"
     ],
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/mainlogo.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/mainlogo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.sammonster495.voluntech",
