@@ -303,7 +303,7 @@ export default function Chats1() {
                 </View>
                 <View style={{borderWidth:1,borderColor:theme === 'light' ? 'black' : 'white',backgroundColor:theme === 'light' ? '#f6ffe2' : '#3A3A3A'}} className="bottom-0 absolute flex-row mb-2 rounded-full border h-[50px] w-[85%] self-center px-2">
                     <TextInput style={{color: theme === 'light' ? 'black' : 'white'}} placeholderTextColor={theme === 'light' ? 'grey' : '#CCCCCC'} placeholder="Type a message" value={message} onChangeText={text => setMessage(text)} className="w-4/5 px-2" />
-                    <TouchableOpacity className="flex justify-center w-1/5 rounded-full"><TouchableOpacity className={`${message ? 'bg-[#a0e50b]' : ''} w-10 h-10 flex-col justify-center rounded-full self-end`} onPress={() => sendMessage()}><Image source={require('@/assets/images/send.png')} style={{tintColor: theme === 'light' ? 'grey' : 'white'}} className="self-center" /></TouchableOpacity></TouchableOpacity>
+                    <TouchableOpacity className="flex justify-center w-1/5 rounded-full"><TouchableOpacity  style={{backgroundColor:message ? theme === 'light' ? '#a0e50b' : '#6BAF0A' : 'transparent'}} className={` w-10 h-10 flex-col justify-center rounded-full self-end`} onPress={() => sendMessage()}><Image source={require('@/assets/images/send.png')} style={{tintColor: theme === 'light' ? 'grey' : 'white'}} className="self-center" /></TouchableOpacity></TouchableOpacity>
                 </View>
             </Modal>
             <Modal
