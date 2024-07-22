@@ -143,7 +143,7 @@ export default function Tasks() {
     const renderTask = (item:{type:string;signedup:number;required:number}) => {
         return (
             <View style={styles.taskInfo} key={item.type}>
-                <Text style={{color:'#ffffff',marginBottom:0}}>{mapping[item.type]}</Text>
+                <Text style={{color:theme === 'light' ? 'black' : '#ffffff',marginBottom:0}}>{mapping[item.type]}</Text>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                     <ProgressBar progress={item.signedup / item.required} signed={item.signedup} required={item.required} />
                 </View>
@@ -164,17 +164,17 @@ export default function Tasks() {
                     <View style={styles.task} className="self-center">
                         <View style={styles.taskId}>
                             <Image 
-                                style={styles.image}
-                                source={require('@/assets/images/profile.png')}
+                                style={{marginRight: 7,}}
+                                source={require('@/assets/images/notifications.png')}
                             />
                             <View>
-                                <Text style={{fontSize:16,color:'#ffffff',marginBottom:3, marginRight: 10}}>{item.description}</Text>
-                                <Text style={{fontSize:16,color:'#ffffff',marginBottom:3, marginRight: 10}}>({item?.createdBy['ngo']['name']})</Text>
+                                <Text style={{fontSize:16,color:theme === 'light' ? 'black' : '#ffffff',marginBottom:3, marginRight: 10}}>{item.description}</Text>
+                                <Text style={{fontSize:16,color:theme === 'light' ? 'black' : '#ffffff',marginBottom:3, marginRight: 10}}>({item?.createdBy['ngo']['name']})</Text>
                             </View>
                         </View>
                         <View className="flex-row px-5">
-                            <Text style={{fontSize:16,color:'#ffffff',padding:5, textAlign: 'center'}} className="self-center">Location :</Text>
-                            <Text style={{fontSize:16,color:'#ffffff',padding:5, textAlign: 'center'}} className="w-4/5">{item.location['address']}</Text>
+                            <Text style={{fontSize:16,color:theme === 'light' ? 'black' : '#ffffff',padding:5, textAlign: 'center'}} className="self-center">Location :</Text>
+                            <Text style={{fontSize:16,color:theme === 'light' ? 'black' : '#ffffff',padding:5, textAlign: 'center'}} className="w-4/5">{item.location['address']}</Text>
                         </View>
                         <View style={styles.taskDes}>
                             {Object.keys(item.requiredPersonnel).map(key => (
@@ -209,7 +209,7 @@ const createStyles = (theme: string) => StyleSheet.create({
     },
     task: {
         display: 'flex',
-        backgroundColor: '#234006',
+        backgroundColor:theme === 'light' ? '#83a638' :'#234006',
         width: "90%",
         justifyContent: 'center',
         borderRadius: 20,
@@ -228,11 +228,6 @@ const createStyles = (theme: string) => StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: 10,
-    },
-    image: {
-        height: 54,
-        width: 54,
-        marginRight: 7,
     },
     taskInfo: {
         justifyContent: 'center',

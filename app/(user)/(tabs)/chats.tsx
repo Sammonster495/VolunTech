@@ -303,7 +303,7 @@ export default function Chats1() {
                 </View>
                 <View style={{borderWidth:1,borderColor:theme === 'light' ? 'black' : 'white',backgroundColor:theme === 'light' ? '#f6ffe2' : '#3A3A3A'}} className="bottom-0 absolute flex-row mb-2 rounded-full border h-[50px] w-[85%] self-center px-2">
                     <TextInput style={{color: theme === 'light' ? 'black' : 'white'}} placeholderTextColor={theme === 'light' ? 'grey' : '#CCCCCC'} placeholder="Type a message" value={message} onChangeText={text => setMessage(text)} className="w-4/5 px-2" />
-                    <TouchableOpacity className="flex justify-center w-1/5 rounded-full"><TouchableOpacity className={`${message ? 'bg-[#a0e50b]' : ''} w-10 h-10 flex-col justify-center rounded-full self-end`} onPress={() => sendMessage()}><Image source={require('@/assets/images/send.png')} style={{tintColor: theme === 'light' ? 'grey' : 'white'}} className="self-center" /></TouchableOpacity></TouchableOpacity>
+                    <TouchableOpacity className="flex justify-center w-1/5 rounded-full"><TouchableOpacity  style={{backgroundColor:message ? theme === 'light' ? '#a0e50b' : '#6BAF0A' : 'transparent'}} className={` w-10 h-10 flex-col justify-center rounded-full self-end`} onPress={() => sendMessage()}><Image source={require('@/assets/images/send.png')} style={{tintColor: theme === 'light' ? 'grey' : 'white'}} className="self-center" /></TouchableOpacity></TouchableOpacity>
                 </View>
             </Modal>
             <Modal
@@ -376,7 +376,7 @@ export default function Chats1() {
                         </View>
                         {userInfo.type !== 'normal' && <View style={styles.infoItem}>
                             <Text style={styles.infoLabel}>NGO</Text>
-                                <Text style={styles.infoText}>{user.type.name}</Text>
+                                <Text style={styles.infoText}>{userInfo.type.name}</Text>
                         </View>}
                     </View>}
                 </View>
@@ -424,7 +424,6 @@ const createStyles =(theme : string) =>StyleSheet.create({
     },
     statusText: {
         fontSize: 16,
-        color: '#333',
         marginRight: 10,
         color: theme === 'dark' ? '#74A608' :'#1E1E1E',
     },
@@ -480,19 +479,5 @@ const createStyles =(theme : string) =>StyleSheet.create({
         flexWrap:'wrap',
         alignSelf: 'center',
         color: theme === 'dark' ? '#74A608' :'#1E1E1E',
-    },
-    signOutButton: {
-        height:35,
-        width:70,
-        alignSelf: 'center',
-        margin:20,
-        padding:5,
-        backgroundColor:'#83A638',
-        borderRadius: 7,
-    },
-    signOutText: {
-        alignSelf: 'center',
-        color:'white',
-        padding:'auto'
     }
 });

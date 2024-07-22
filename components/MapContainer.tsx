@@ -5,6 +5,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
+import polyline from '@mapbox/polyline';
 
 interface LocationType {
     latitude: number;
@@ -165,7 +166,7 @@ export default function Map() {
                 {routeCoordinates.length > 0 && (
                     <Polyline
                         coordinates={routeCoordinates}
-                        strokeWidth={4}
+                        strokeWidth={6}
                         strokeColor="rgba(0, 150, 255, 0.8)"
                     />
                 )}

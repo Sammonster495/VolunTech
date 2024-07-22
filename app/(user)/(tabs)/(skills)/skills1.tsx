@@ -1,22 +1,20 @@
-import { useTheme } from '@/theme/ThemeContext';
 import { useNavigation } from 'expo-router';
 import React from 'react';
 import { SafeAreaView, Text, View, StyleSheet, Pressable} from 'react-native';
+import { useTheme } from '@/theme/ThemeContext';
 
 export default function skills1() {
 
     const navigation = useNavigation();
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const navigateToSkills = (skillId: number) => {
         navigation.navigate('skills2',{skillId: skillId});
     }
 
-    const { theme } = useTheme();
-
-    const styles = createStyles(theme);
-
     return (
-        <SafeAreaView style={{flex:1, backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2',}}>
+        <SafeAreaView style={{flex:1, backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2'}}>
             <View style={styles.headerContainer}>
                 <Text style={styles.header}>Train Your Skills</Text>
                 <Text style={styles.text}>Select a skill of your interest and expertise and train to sharpen them further.</Text>
@@ -41,9 +39,9 @@ export default function skills1() {
 
 const createStyles = (theme: string) => StyleSheet.create({
     headerContainer:{
-        backgroundColor: theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
+        backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
         height:150,
-        padding:10,
+        padding:20,
         margin:7,
         borderRadius:10,
     },
@@ -58,13 +56,15 @@ const createStyles = (theme: string) => StyleSheet.create({
         padding:10,
     },
     listContainer: {
-        backgroundColor: theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
+        backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
         height:'auto',
+        
     },
     listRow: {
         flexDirection: 'row',
         alignContent:'space-between',
-        paddingHorizontal:25,
+        justifyContent: 'space-around',
+        marginHorizontal: 10,
         paddingVertical:5
     },
     listComponent: {

@@ -406,7 +406,7 @@ export default function Tasks() {
     const renderTask = (item:{type:string;signedup:number;required:number}) => {
         return (
             <View style={{justifyContent: 'center',alignContent: 'center',alignItems: 'center',padding: 10,marginBottom: 10,}} key={item.type}>
-                <Text style={{color:'#ffffff',marginBottom:0}}>{mapping[item.type]}</Text>
+                <Text style={{color:theme === 'light' ? 'black' : '#ffffff',marginBottom:0}}>{mapping[item.type]}</Text>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                     <ProgressBar progress={item.signedup / item.required} signed={item.signedup} required={item.required} />
                 </View>
@@ -436,7 +436,7 @@ export default function Tasks() {
                           keyExtractor={(item, index) => index.toString()}
                           className="py-3"
                           renderItem={({ item }) => (
-                              <View className="flex p-5 mb-5 self-center bg-[#83a638] rounded-xl" style={{ width: "90%" }}>
+                            <View className="flex p-5 mb-5 self-center bg-[#83a638] rounded-xl" style={{ width: "90%", backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}}>
                                   <Image source={{ uri: item.image }} className="h-56 w-48 mb-5 rounded-xl self-center" />
                                   <View className="p-2 px-3 mb-3 bg-[#e6ffaf] rounded-md flex-row">
                                       <Text style={{ fontSize: 16 }} className="w-2/5">Reported by : </Text>
@@ -523,27 +523,27 @@ export default function Tasks() {
           {category && (
               <View style={{ flex: 1, position: 'relative' }}> 
                 {user?.designation === 'head' &&
-                  <TouchableOpacity style={{backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}} className="w-10 h-10 rounded-full absolute bottom-5 right-5 z-40" onPress={() => setCreateTask(true)}><Text className="text-5xl text-center">+</Text></TouchableOpacity>
+                  <TouchableOpacity style={{backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}} className="w-10 h-10 rounded-full absolute bottom-5 right-5 z-40" onPress={() => setCreateTask(true)}><Text style={{color: theme === 'light' ? 'black' : '#c9c9c9'}} className="text-5xl text-center">+</Text></TouchableOpacity>
                 }
                 {(userTasks.length > 0 || ngoTasks.length > 0) && <FlatList
                     style={{flexGrow: 1}}
                     data={userTasks.length > 0 ? userTasks : ngoTasks}
                     keyExtractor={(item, index) => item.id.toString()}
                     renderItem={({ item }) => (
-                        <View style={{display: 'flex', backgroundColor: '#234006', width: "90%", justifyContent: 'center', borderRadius: 20, marginVertical: 10, paddingBottom: 10}} className="self-center">
+                        <View style={{display: 'flex', backgroundColor:theme === 'light' ? '#83a638' :'#234006', width: "90%", justifyContent: 'center', borderRadius: 20, marginVertical: 10, paddingBottom: 10}} className="self-center">
                             <View style={{flexDirection: 'row', alignItems: 'center', width: 270, paddingLeft: 25, paddingTop: 10,}}>
                                 <Image 
-                                    style={{height: 54,width: 54,marginRight: 7,}}
-                                    source={require('@/assets/images/profile.png')}
+                                    style={{marginRight: 7,}}
+                                    source={require('@/assets/images/notifications.png')}
                                 />
                                 <View>
-                                    <Text style={{fontSize:16,color:'#ffffff',marginBottom:3, marginRight: 10}}>{item.description}</Text>
-                                    <Text style={{fontSize:16,color:'#ffffff',marginBottom:3, marginRight: 10}}>({item?.createdBy['ngo']['name']})</Text>
+                                    <Text style={{fontSize:16,color:theme === 'light' ? 'black' : '#ffffff',marginBottom:3, marginRight: 10}}>{item.description}</Text>
+                                    <Text style={{fontSize:16,color:theme === 'light' ? 'black' : '#ffffff',marginBottom:3, marginRight: 10}}>({item?.createdBy['ngo']['name']})</Text>
                                 </View>
                             </View>
                             <View className="flex-row px-5">
-                                <Text style={{fontSize:16,color:'#ffffff',padding:5, textAlign: 'center'}} className="self-center">Location :</Text>
-                                <Text style={{fontSize:16,color:'#ffffff',padding:5, textAlign: 'center'}} className="w-4/5">{item?.location?.address}</Text>
+                            <Text style={{fontSize:16,color:theme === 'light' ? 'black' : '#ffffff',padding:5, textAlign: 'center'}} className="self-center">Location :</Text>
+                            <Text style={{fontSize:16,color:theme === 'light' ? 'black' : '#ffffff',padding:5, textAlign: 'center'}} className="w-4/5">{item?.location?.address}</Text>
                             </View>
                             <View style={{flexDirection: 'column',alignItems: 'center',justifyContent: 'center',paddingTop: 10,}}>
                                 {Object.keys(item?.requiredPersonnel).map(key => (
@@ -557,7 +557,7 @@ export default function Tasks() {
                         </View>
                     )}
                 />}
-                {!(userTasks.length > 0) && !(ngoTasks.length > 0) && <View className="flex-1"><Text className="text-center text-4xl text-[#134006] my-[60%]">No tasks uploaded</Text></View>}
+                {!(userTasks.length > 0) && !(ngoTasks.length > 0) && <View className="flex-1"><Text style={{color:theme === 'light' ? '#134006' : '#74a608'}} className="text-center text-4xl  my-[60%]">No tasks uploaded</Text></View>}
               </View>
           )}
       </View>

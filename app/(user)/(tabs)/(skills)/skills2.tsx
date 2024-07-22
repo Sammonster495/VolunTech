@@ -1,8 +1,8 @@
-import { useTheme } from '@/theme/ThemeContext';
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Pressable, Linking, Alert } from 'react-native';
 import YouTube from 'react-native-youtube-iframe';
+import { useTheme } from '@/theme/ThemeContext';
 
 
 const skillDetails: { [key: number]: { skill: string, video: string, ddlink: string, ttlink: string, wikihow: string } } = {
@@ -68,7 +68,7 @@ export default function skills2() {
     }
 
     return (
-        <SafeAreaView style={{  backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2', flex: 1}}>
+        <SafeAreaView style={{ backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2', flex: 1 }}>
             <View style={styles.headerContainer}>
                 <Text style={styles.header}>Train Your Skills</Text>
                 <Text style={styles.text}>Skill:{skillDetail.skill}</Text>
@@ -99,7 +99,7 @@ export default function skills2() {
     );
 }
 
-const createStyles = (theme) =>StyleSheet.create({
+const createStyles = (theme: string) =>StyleSheet.create({
     headerContainer:{
         backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
         height:150,

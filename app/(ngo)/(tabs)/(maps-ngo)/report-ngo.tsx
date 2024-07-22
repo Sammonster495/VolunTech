@@ -8,6 +8,7 @@ import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/firebase/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useNavigation } from "expo-router";
+import { useTheme } from "@/theme/ThemeContext";
 
 export default function Report() {
     const navigation = useNavigation();
@@ -15,6 +16,7 @@ export default function Report() {
     const [description, setDescription] = useState<string>();
     const [location, setLocation] = useState<{ address: string, latitude: number, longitude: number } | null>(null);
     const [reporting, setReporting] = useState<boolean>(false);
+    const { theme } = useTheme();
 
     async function pickImage() {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -94,13 +96,13 @@ export default function Report() {
 
     return (
         <GestureHandlerRootView>
-            <ScrollView className="bg-[#f6ffe2] min-h-screen">
-                <View className="h-56 w-48 bg-white border self-center mt-8 flex justify-center items-center">
-                    {!image?.uri && <TouchableOpacity className="w-8 h-8 flex-0 rounded-full" onPress={() => pickImage()}><Image source={require('@/assets/images/image.png')} /></TouchableOpacity>}
+            <ScrollView style={{backgroundColor:theme === 'light' ? '#f6ffe2' : '#1e1e1e'}} className=" min-h-screen">
+                <View style={{backgroundColor:theme === 'light' ? 'white' : 'black',borderWidth:1,borderColor:theme === 'light' ? 'black' : 'white' }} className="h-56 w-48 border self-center mt-8 flex justify-center items-center">
+                    {!image?.uri && <TouchableOpacity className="w-8 h-8 flex-0 rounded-full" onPress={() => pickImage()}><Image source={theme === 'light' ? require('@/assets/images/image.png') : require('@/assets/images/image-dark.png')} /></TouchableOpacity>}
                     {image?.uri && <Image source={{ uri: image.uri }} style={{ height: 224, width: 192 }} />}
                 </View>
-                <TextInput placeholder="Add a description..." className="w-[80%] h-32 border text-lg bg-white self-center mt-8 px-2" onChangeText={(text) => setDescription(text)} />
-                <TouchableOpacity className="bg-[#74a608] w-[30%] h-10 flex justify-center items-center rounded-2xl self-center mt-10" onPress={() => handleSubmit()}><Text className="text-white text-xl">{reporting ? 'Reporting...' : 'Report'}</Text></TouchableOpacity>
+                <TextInput style={{backgroundColor:theme === 'light' ? 'white' : 'black',borderWidth:1,borderColor:theme === 'light' ? 'black' : 'white' }} placeholderTextColor={theme === 'light' ? 'grey' : '#d9d9d9'} placeholder="Add a description..." className="w-[80%] h-32 border text-lg self-center mt-8 px-2" value={description} onChangeText={(text) => setDescription(text)} />
+                <TouchableOpacity style={{backgroundColor:theme === 'light' ? '#74a608' : '#1E1E1E',borderWidth:1,borderColor:theme === 'light' ? '' : '#ebf21b'}} className=" w-[30%] h-10 flex justify-center items-center rounded-2xl self-center mt-10" onPress={() => handleSubmit()}><Text style={{color:theme === 'light' ? 'white' : '#ebf21b'}} className=" text-xl">{reporting ? 'Reporting...' : 'Report'}</Text></TouchableOpacity>
             </ScrollView>
         </GestureHandlerRootView>
     )

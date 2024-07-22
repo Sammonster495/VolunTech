@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet} from 'react-native';
+import { useTheme } from '@/theme/ThemeContext';
 
 interface ProgressBarProps {
     progress: number;
@@ -8,6 +9,9 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar(props: ProgressBarProps) {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
+
     return (
         <View style={styles.progressBarContainer}>
             <Text style={styles.progressText}>{`${props.signed}/${props.required}`}</Text>
@@ -16,7 +20,7 @@ export default function ProgressBar(props: ProgressBarProps) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: string) =>StyleSheet.create({
     progressBarContainer: {
         height: 20, // Adjust height as needed
         width: '50%', // Takes full width
@@ -26,7 +30,7 @@ const styles = StyleSheet.create({
     },
     progressBar: {
         height: '100%',
-        backgroundColor: '#74a608',
+        backgroundColor:theme === 'light' ? '#DCE31A':'#74a608',
         position: 'relative',
     },
     progressText: {

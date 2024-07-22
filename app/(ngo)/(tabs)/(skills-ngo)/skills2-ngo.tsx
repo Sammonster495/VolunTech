@@ -2,6 +2,7 @@ import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Pressable, Linking, Alert } from 'react-native';
 import YouTube from 'react-native-youtube-iframe';
+import { useTheme } from '@/theme/ThemeContext';
 
 
 const skillDetails: { [key: number]: { skill: string, video: string, ddlink: string, ttlink: string, wikihow: string } } = {
@@ -53,6 +54,8 @@ export default function skills2() {
     const route = useRoute();
     const {skillId} = route.params as {skillId: number};
     const skillDetail = skillDetails[skillId];
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const openURL = async (url: string) => {
         const supported = await Linking.canOpenURL(url);
@@ -65,7 +68,7 @@ export default function skills2() {
     }
 
     return (
-        <SafeAreaView style={{ backgroundColor: '#f6ffe2', flex: 1}}>
+        <SafeAreaView style={{ backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2', flex: 1 }}>
             <View style={styles.headerContainer}>
                 <Text style={styles.header}>Train Your Skills</Text>
                 <Text style={styles.text}>Skill:{skillDetail.skill}</Text>
@@ -96,27 +99,27 @@ export default function skills2() {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: string) =>StyleSheet.create({
     headerContainer:{
-        backgroundColor:'#f6ffe2',
+        backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
         height:150,
         padding:20,
         margin:7,
         borderRadius:10,
     },
     header:{
-        color:'#627F00',
+        color:theme === 'light' ? '#627F00' : '#74A608',
         fontSize:32,
         alignSelf: 'center',
     },
     text:{
-        color:'#809B6B',
+        color:theme === 'light' ? '#809B6B' : '#ffffff',
         fontSize:20,
         alignSelf: 'center',
         padding:10,
     },
     contentContainer:{
-        backgroundColor: '#f6ffe2',
+        backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
         height:'auto',
     },
     row: {
@@ -126,7 +129,7 @@ const styles = StyleSheet.create({
         paddingVertical:3
     },
     LongComponent1: {
-        backgroundColor:'#f6ffe2',
+        backgroundColor:theme === 'dark' ? '#1E1E1E' : '#f6ffe2',
         padding:3,
         margin:2,
         height:177,
@@ -137,7 +140,7 @@ const styles = StyleSheet.create({
         borderRadius:7
     },
     LongComponent2: {
-        backgroundColor:'#627F00',
+        backgroundColor:theme === 'light' ? '#627F00' : '#234006',
         padding:3,
         margin:2,
         height:100,
@@ -147,7 +150,7 @@ const styles = StyleSheet.create({
         borderRadius:7
     },
     ShortComponent: {
-        backgroundColor:'#627F00',
+        backgroundColor:theme === 'light' ? '#627F00' : '#234006',
         margin: 2,
         height:100,
         width:"49%",

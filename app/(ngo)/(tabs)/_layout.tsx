@@ -20,7 +20,7 @@ export default function TabLayout() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.menubar} className="flex-row mt-[5.6%]">
+      <View style={styles.menubar} className="flex-row mt-[5.8%]">
         <Image source={require('@/assets/images/logo-small.png')} className="h-[49] w-[56] my-1" />
         <Text style={{color: theme === 'dark' ? 'white' : 'black'}} className="text-right self-center  mr-2 w-3/5">{user?.name}</Text>
         <TouchableOpacity className="self-center"
@@ -59,7 +59,7 @@ export default function TabLayout() {
           headerShown: false,
           tabBarIcon: () => <Image source={theme === 'light' ? require('@/assets/images/skills.png') : require('@/assets/images/skills-dark.png')} />
         }} />
-        <Tabs.Screen name="(donations-ngo)" options={{
+        <Tabs.Screen name="donations-ngo" options={{
           headerShown: false,
           tabBarIcon: () => <Image source={theme === 'light' ? require('@/assets/images/donations.png') : require('@/assets/images/donations-dark.png')} />
         }} />
