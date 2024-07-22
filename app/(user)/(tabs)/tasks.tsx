@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { collection, doc, getDoc, getDocs, onSnapshot, query, queryEqual, updateDoc, where } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 import { CometChat } from "@cometchat-pro/react-native-chat";
+import { useTheme } from "@/theme/ThemeContext";
 
 const mapping: {[key: string]: string} = {
     'rescue': 'Rescue',
@@ -20,6 +21,8 @@ export default function Tasks() {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [userloading, setUserLoading] = useState<boolean>(true);
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -189,10 +192,10 @@ export default function Tasks() {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: string) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f6ffe2',
+        backgroundColor:theme === 'light' ? '#f6ffe2' : '#1E1E1E',
     },
     content: {
         justifyContent: 'center',

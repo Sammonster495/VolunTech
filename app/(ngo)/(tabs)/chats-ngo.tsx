@@ -53,10 +53,15 @@ export default function ChatsHome() {
             const querySnapshot = await getDocs(q);
             if (!querySnapshot.empty) {
                 querySnapshot.forEach(doc => {
-                    memberDetails.push({ id: doc.id, name: doc.data().name });
-                    if (doc.id !== user.id) {
+                    console.log(doc.data());
+                    
+                    try {
+                        memberDetails.push({ id: doc.id, name: doc.data().name });
                         const member = new CometChat.GroupMember(doc.id, CometChat.GROUP_MEMBER_SCOPE.ADMIN);
                         members.push(member);
+                    } catch (error) {
+                        console.error('Error adding member:', error);
+                        
                     }
                 });
                 const GUID = "group_" + new Date().getTime();

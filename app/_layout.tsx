@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Linking, AppState } from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import { CometChat } from "@cometchat-pro/react-native-chat";
+import { ThemeProvider } from "@/theme/ThemeContext";
 
 export default function RootLayout() {
   const [user, setUser] = useState<any>(null);
@@ -71,14 +72,17 @@ export default function RootLayout() {
   }, [user, userLoading])
 
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="register" options={{ headerShown: false }} />
-      <Stack.Screen name="volunteerLogin" options={{ headerShown: false }} />
-      <Stack.Screen name="ngoLogin" options={{ headerShown: false }} />
-      <Stack.Screen name="oauthredirect" options={{ headerShown: false }} />
-      <Stack.Screen name="(user)" options={{ headerShown: false }} />
-      <Stack.Screen name="(ngo)" options={{ headerShown: false }} />
-    </Stack>
+    <ThemeProvider>
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="register" options={{ headerShown: false }} />
+        <Stack.Screen name="volunteerLogin" options={{ headerShown: false }} />
+        <Stack.Screen name="ngoLogin" options={{ headerShown: false }} />
+        <Stack.Screen name="oauthredirect" options={{ headerShown: false }} />
+        <Stack.Screen name="(user)" options={{ headerShown: false }} />
+        <Stack.Screen name="(ngo)" options={{ headerShown: false }} />
+      </Stack>
+    </ThemeProvider>
+    
   );
 }

@@ -1,22 +1,24 @@
-import { useEffect, useState, useRef } from 'react';
-import MapView, { Circle, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import React, { useEffect, useState, useRef } from 'react';
+import MapView, { Circle, Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Import Ionicons from @expo/vector-icons
-
-
+import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
 
 interface LocationType {
     latitude: number;
     longitude: number;
 }
 
+const GOOGLE_API_KEY = "AIzaSyBqeTB4Vbev342dA6b4PWZf-H3S1QTZyrM";
+
 export default function Map() {
     const [location, setLocation] = useState<LocationType | null>(null);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [search, setSearch] = useState<LocationType | null>(null);
     const [searchActive, setSearchActive] = useState(false);
+    const [routeCoordinates, setRouteCoordinates] = useState<LocationType[]>([]);
     const mapRef = useRef<MapView>(null);
 
     useEffect(() => {
@@ -58,7 +60,7 @@ export default function Map() {
         };
     }, [searchActive]);
 
-    const handleSearch = (data: any, details: any) => {
+    const handleSearch = async (data: any, details: any) => {
         if (details) {
             const { lat, lng } = details.geometry.location;
             const newSearchLocation = { latitude: lat, longitude: lng };
@@ -73,7 +75,34 @@ export default function Map() {
                     longitudeDelta: 0.01,
                 }, 1000);
             }
+
+            if (location) {
+                const directions = await getDirections(location, newSearchLocation);
+                setRouteCoordinates(directions);
+            }
         }
+    };
+
+    const getDirections = async (startLoc: LocationType, destinationLoc: LocationType) => {
+        try {
+            const response = await axios.get(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc.latitude},${startLoc.longitude}&destination=${destinationLoc.latitude},${destinationLoc.longitude}&key=${GOOGLE_API_KEY}`);
+            const points = decodePolyline(response.data.routes[0].overview_polyline.points);
+            return points;
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    };
+
+    const decodePolyline = (t: string) => {
+        let points = [];
+        for (let step of polyline.decode(t)) {
+            points.push({
+                latitude: step[0],
+                longitude: step[1]
+            });
+        }
+        return points;
     };
 
     const handleLocate = () => {
@@ -84,6 +113,7 @@ export default function Map() {
                 longitudeDelta: 0.01,
             }, 1000);
             setSearchActive(false); // Reset the search flag
+            setRouteCoordinates([]); // Clear the route
         }
     };
 
@@ -94,7 +124,7 @@ export default function Map() {
                 fetchDetails={true}
                 onPress={handleSearch}
                 query={{
-                    key: "AIzaSyBqeTB4Vbev342dA6b4PWZf-H3S1QTZyrM",
+                    key: GOOGLE_API_KEY,
                     language: "en",
                 }}
                 styles={{
@@ -132,6 +162,13 @@ export default function Map() {
                         }}
                     />
                 )}
+                {routeCoordinates.length > 0 && (
+                    <Polyline
+                        coordinates={routeCoordinates}
+                        strokeWidth={4}
+                        strokeColor="rgba(0, 150, 255, 0.8)"
+                    />
+                )}
             </MapView>
             <TouchableOpacity style={styles.locateButton} onPress={handleLocate}>
                 <Ionicons name="locate" size={24} color="white" />
@@ -143,7 +180,7 @@ export default function Map() {
 const styles = StyleSheet.create({
     locateButton: {
         position: 'absolute',
-        bottom: 100,
+        bottom: "50%",
         right: 20,
         backgroundColor: 'rgba(0, 150, 255, 1)',
         borderRadius: 50,
