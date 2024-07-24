@@ -127,6 +127,19 @@ export default function User() {
                         backgroundColor: theme === 'dark' ? 'black' : '#83A638',
                     }
                 }} />
+                <Stack.Screen name="about" options={{
+                headerShown: true,
+                headerTitle: "About Us",
+                headerTitleAlign: 'center',
+                headerTintColor: theme === 'dark' ? '#83A638': '#1E1E1E',
+                headerTitleStyle: { 
+                    fontSize: 30,
+                    color: theme === 'dark' ? '#83A638' : 'black',
+                },
+                headerStyle: { 
+                    backgroundColor: theme === 'dark' ? 'black' : '#83A638',
+                } 
+            }} />
             </Stack>
         </>
     )

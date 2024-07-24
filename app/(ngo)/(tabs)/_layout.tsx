@@ -21,7 +21,11 @@ export default function TabLayout() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.menubar} className="flex-row mt-[5.8%]">
-        <Image source={require('@/assets/images/logo-small.png')} className="h-[49] w-[56] my-1" />
+      <TouchableOpacity
+         onPress={() => navigation.navigate('about')}
+        >
+          <Image source={require('@/assets/images/logo-small.png')} className="h-[49] w-[56] my-1" />
+        </TouchableOpacity>
         <Text style={{color: theme === 'dark' ? 'white' : 'black'}} className="text-right self-center  mr-2 w-3/5">{user?.name}</Text>
         <TouchableOpacity className="self-center"
          onPress={() => navigation.navigate('profile-ngo')}
