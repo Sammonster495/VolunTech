@@ -10,7 +10,7 @@ export default function about() {
             <ScrollView>
                 <View style={styles.container}>
                     <Text style={styles.header}>Vision</Text>
-                    <Text style={styles.content}>Our vision at VolunChat is to create a robust and responsive volunteer network that empowers communities to efficiently manage and respond to disasters. By connecting volunteers and NGOs through innovative technology, we aim to foster safer, more resilient communities worldwide.</Text>
+                    <Text style={styles.content}>Our vision at VolunTech is to create a robust and responsive volunteer network that empowers communities to efficiently manage and respond to disasters. By connecting volunteers and NGOs through innovative technology, we aim to foster safer, more resilient communities worldwide.</Text>
                 </View>
                 <View style={styles.container}>
                     <Text style={styles.header}>Mission</Text>
@@ -20,25 +20,25 @@ export default function about() {
                     <Text style={styles.header}>Team Members</Text>
                     <View style={{flexDirection:'row', width:"90%", justifyContent: 'space-around' }}>
                         <View  style={{width:'25%', backgroundColor:'#d9d9d9',borderRadius:10}}>
-                            <Image source={require('@/assets/images/profile.png')} borderRadius={1}/>
+                            <Image source={require('@/assets/images/ameya.png')} style={{ alignSelf: 'center', borderRadius: 100 }}/>
                             <Text style={{textAlign:'center'}}>Ameya Guru Kowshik</Text>
                         </View>
                         <View style={{width:'25%', backgroundColor:'#d9d9d9',borderRadius:10}}>
-                            <Image source={require('@/assets/images/profile.png')} borderRadius={1}/>
+                            <Image source={require('@/assets/images/aishik.png')} style={{ alignSelf: 'center', borderRadius: 100 }}/>
                             <Text style={{textAlign:'center'}}>Aishik Roy</Text>
                         </View>
                         <View style={{width:'25%', backgroundColor:'#d9d9d9',borderRadius:10}}>
-                            <Image source={require('@/assets/images/profile.png')} borderRadius={1}/>
+                            <Image source={require('@/assets/images/ashish.png')} style={{ alignSelf: 'center', borderRadius: 100 }}/>
                             <Text style={{textAlign:'center'}}>Ashish Hebbar</Text>
                         </View>
                     </View>
-                    <View style={{flexDirection:'row',width:'90%',justifyContent:'space-around',marginTop:7}}>
+                    <View style={{flexDirection:'row',width:'90%',justifyContent:'space-evenly',marginTop:7}}>
                         <View style={{width:'25%',backgroundColor:'#d9d9d9',borderRadius:10}}>
-                            <Image source={require('@/assets/images/profile.png')} borderRadius={1}/>
+                            <Image source={require('@/assets/images/profile.png')} style={{ alignSelf: 'center', borderRadius: 100 }}/>
                             <Text style={{textAlign:'center'}}>Rakshith N Poojary</Text>
                         </View>
                         <View style={{width:'25%',backgroundColor:'#d9d9d9',borderRadius:10}}>
-                            <Image source={require('@/assets/images/profile.png')} borderRadius={1}/>
+                            <Image source={require('@/assets/images/profile.png')} style={{ alignSelf: 'center', borderRadius: 100 }}/>
                             <Text style={{textAlign:'center'}}>Samarth H Shetty</Text>
                         </View>
                     </View>

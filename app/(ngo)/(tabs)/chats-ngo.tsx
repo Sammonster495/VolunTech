@@ -253,8 +253,8 @@ export default function ChatsHome() {
     }
 
     return (
-        <SafeAreaView style={{ backgroundColor:theme === 'light'?'#f6ffe2':'#1E1E1E', flex: 1, position: 'relative' }} className="mb-[19.4%]">
-            {user?.designation === 'head' && <TouchableOpacity style={{backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}} className="w-10 h-10 rounded-full absolute bottom-5 right-5 z-40" onPress={() => setCreateGroup(true)}><Text style={{color:theme === 'light' ? 'black' : '#c9c9c9'}} className="text-5xl text-center">+</Text></TouchableOpacity>}
+        <SafeAreaView style={{ backgroundColor:theme === 'light'?'#f6ffe2':'#1E1E1E', flex: 1, position: 'relative' }}>
+            {user?.designation === 'head' && <TouchableOpacity style={{backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}} className="w-10 h-10 rounded-full absolute bottom-[12%] right-5 z-40" onPress={() => setCreateGroup(true)}><Text style={{color:theme === 'light' ? 'black' : '#c9c9c9'}} className="text-5xl text-center">+</Text></TouchableOpacity>}
             <ScrollView style={{ flex: 1 }}>
                 {conversations.length > 0 ? conversations.map((conversation: any) => {
                     const lastMessage = conversation.lastMessage;

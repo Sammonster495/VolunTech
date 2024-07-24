@@ -56,7 +56,7 @@ export default function Tasks() {
     }
 
     return (
-        <SafeAreaView style={styles.container} className="mb-[19.4%]">
+        <SafeAreaView style={styles.container}>
             <View style={styles.content}>
                 <Text style={styles.header}>Tasks Allocation</Text>
             </View>
@@ -102,5 +102,5 @@ const createStyles = (theme: string) => StyleSheet.create({
     taskDes: { flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop: 10 },
     taskInfo: { justifyContent: 'center', alignContent: 'center', alignItems: 'center', padding: 10, marginBottom: 10 },
     register: { backgroundColor: '#DCE31A', height: 42, width: 149, justifyContent: 'center', alignContent: 'center', alignItems: 'center', borderRadius: 18, marginTop: 30, marginBottom: 20 },
-    list: { flexGrow: 1 }
+    list: { flexGrow: 1, paddingBottom: "18%" }
 });

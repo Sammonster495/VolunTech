@@ -127,7 +127,7 @@ export default function User() {
                         backgroundColor: theme === 'dark' ? 'black' : '#83A638',
                     }
                 }} />
-                <Stack.Screen name="about" options={{
+                <Stack.Screen name="about-ngo" options={{
                 headerShown: true,
                 headerTitle: "About Us",
                 headerTitleAlign: 'center',

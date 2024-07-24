@@ -22,7 +22,7 @@ export default function TabLayout() {
     <SafeAreaView style={styles.container}>
       <View style={styles.menubar} className="flex-row mt-[5.8%]">
       <TouchableOpacity
-         onPress={() => navigation.navigate('about')}
+         onPress={() => navigation.navigate('about-ngo')}
         >
           <Image source={require('@/assets/images/logo-small.png')} className="h-[49] w-[56] my-1" />
         </TouchableOpacity>
