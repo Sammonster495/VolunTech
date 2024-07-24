@@ -13,10 +13,6 @@
     ],
     "icon": "./assets/images/mainlogo.png",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true
     },

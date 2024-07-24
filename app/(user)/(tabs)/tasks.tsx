@@ -94,7 +94,7 @@ export default function Tasks() {
 }
 
 const createStyles = (theme: string) => StyleSheet.create({
-    container: { flex: 1, backgroundColor:theme === 'light' ? '#f6ffe2' : '#1E1E1E' },
+    container: { flex: 1, backgroundColor:theme === 'light' ? '#f6ffe2' : '#1E1E1E', paddingBottom: "18%" },
     content: { justifyContent: 'center', paddingHorizontal: 25 },
     header: { fontSize: 36, color: '#74A608', justifyContent: 'center', marginBottom: 10 },
     task: { display: 'flex', backgroundColor:theme === 'light' ? '#83a638' :'#234006', width: "90%", justifyContent: 'center', borderRadius: 20, marginVertical: 10 },
