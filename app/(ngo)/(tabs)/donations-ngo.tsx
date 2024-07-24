@@ -34,7 +34,7 @@ function Donations2() {
                 <Text style={styles.header}>Donate Now</Text>
                 <Text style={styles.text}>Available VolunTech NGOs: {Data.length}</Text>
             </View>
-            <View>
+            <View style={{ flex: 1 }}>
                 <FlatList
                     data={Data}
                     renderItem={({ item }) => (

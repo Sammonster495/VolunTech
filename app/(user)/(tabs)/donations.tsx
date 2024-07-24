@@ -17,7 +17,7 @@ export default function Donations2() {
                 <Text style={styles.header}>Donate Now</Text>
                 <Text style={styles.text}>Available VolunTech NGOs: {donationsData.length}</Text>
             </View>
-            <View>
+            <View style={{ flex: 1 }}>
                 <FlatList
                     data={donationsData}
                     renderItem={({ item }) => (

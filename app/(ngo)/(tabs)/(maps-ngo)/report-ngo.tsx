@@ -101,7 +101,7 @@ export default function Report() {
                     {!image?.uri && <TouchableOpacity className="w-8 h-8 flex-0 rounded-full" onPress={() => pickImage()}><Image source={theme === 'light' ? require('@/assets/images/image.png') : require('@/assets/images/image-dark.png')} /></TouchableOpacity>}
                     {image?.uri && <Image source={{ uri: image.uri }} style={{ height: 224, width: 192 }} />}
                 </View>
-                <TextInput style={{backgroundColor:theme === 'light' ? 'white' : 'black',borderWidth:1,borderColor:theme === 'light' ? 'black' : 'white' }} placeholderTextColor={theme === 'light' ? 'grey' : '#d9d9d9'} placeholder="Add a description..." className="w-[80%] h-32 border text-lg self-center mt-8 px-2" value={description} onChangeText={(text) => setDescription(text)} />
+                <TextInput style={{backgroundColor:theme === 'light' ? 'white' : 'black', color:theme === 'light' ? 'black' : 'white',borderWidth:1,borderColor:theme === 'light' ? 'black' : 'white' }} placeholderTextColor={theme === 'light' ? 'grey' : '#d9d9d9'} placeholder="Add a description..." className="w-[80%] h-32 border text-lg self-center mt-8 px-2" value={description} onChangeText={(text) => setDescription(text)} />
                 <TouchableOpacity style={{backgroundColor:theme === 'light' ? '#74a608' : '#1E1E1E',borderWidth:1,borderColor:theme === 'light' ? '' : '#ebf21b'}} className=" w-[30%] h-10 flex justify-center items-center rounded-2xl self-center mt-10" onPress={() => handleSubmit()}><Text style={{color:theme === 'light' ? 'white' : '#ebf21b'}} className=" text-xl">{reporting ? 'Reporting...' : 'Report'}</Text></TouchableOpacity>
             </ScrollView>
         </GestureHandlerRootView>

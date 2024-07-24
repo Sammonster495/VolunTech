@@ -108,19 +108,6 @@ export default function Tasks() {
 }, [])
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'reports'), snapshot => {
-      snapshot.docChanges().forEach(change => {
-          if (change.type === 'removed')
-              setPendingReports(prevReports => prevReports.filter(report => report.id !== change.doc.id));
-      })
-    });
-
-    return () => {
-      unsubscribe();
-    }
-  }, [])
-
-  useEffect(() => {
     if(!userloading && user) {
       const unsubscribe = incidentSubscriptionHandler(user, setIncidents);
 
@@ -287,7 +274,7 @@ export default function Tasks() {
 
     return (
       <GestureHandlerRootView>
-        <SafeAreaView style={{ flex: 1, backgroundColor: theme === 'dark' ? '#1E1E1E' : '#f6ffe2'}} className="mb-[19.4%]">
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme === 'dark' ? '#1E1E1E' : '#f6ffe2'}}>
       <View style={{ flex: 1, width: "100%" }}>
           <View className="flex-row pt-2 ">
               <TouchableOpacity className="w-1/2 flex-col" onPress={() => setCategory(true)}>
@@ -307,7 +294,7 @@ export default function Tasks() {
                           keyExtractor={(item, index) => index.toString()}
                           className="py-3"
                           renderItem={({ item }) => (
-                            <View className="flex p-5 mb-5 self-center bg-[#83a638] rounded-xl" style={{ width: "90%", backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}}>
+                            <View key={item.id} className="flex p-5 mb-5 self-center bg-[#83a638] rounded-xl" style={{ width: "90%", backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}}>
                                   <Image source={{ uri: item.image }} className="h-56 w-48 mb-5 rounded-xl self-center" />
                                   <View className="p-2 px-3 mb-3 bg-[#e6ffaf] rounded-md flex-row">
                                       <Text style={{ fontSize: 16 }} className="w-2/5">Reported by : </Text>
@@ -341,7 +328,7 @@ export default function Tasks() {
                           keyExtractor={(item, index) => index.toString()}
                           className=""
                           renderItem={({ item }) => (
-                              <View className="flex p-5 mb-5 self-center bg-[#83a638] rounded-xl" style={{ width: "90%" }}>
+                              <View key={item.id} className="flex p-5 mb-5 self-center bg-[#83a638] rounded-xl" style={{ width: "90%" }}>
                                   <TouchableOpacity style={{ width: "100%", display: 'flex' }} onPress={() => {
                                     const userDocRef = doc(db, 'users', user.id);
                                     updateDoc(userDocRef, {
@@ -392,16 +379,16 @@ export default function Tasks() {
               </View>
           )}
           {category && (
-              <View style={{ flex: 1, position: 'relative' }}> 
+              <View style={{ flex: 1, position: 'relative', paddingBottom: "18%" }}> 
                 {user?.designation === 'head' &&
-                  <TouchableOpacity style={{backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}} className="w-10 h-10 rounded-full absolute bottom-5 right-5 z-40" onPress={() => setCreateTask(true)}><Text style={{color: theme === 'light' ? 'black' : '#c9c9c9'}} className="text-5xl text-center">+</Text></TouchableOpacity>
+                  <TouchableOpacity style={{backgroundColor:theme === 'light' ? '#83a638' : '#4B6B00'}} className="w-10 h-10 rounded-full absolute bottom-[12%] right-5 z-40" onPress={() => setCreateTask(true)}><Text style={{color: theme === 'light' ? 'black' : '#c9c9c9'}} className="text-5xl text-center">+</Text></TouchableOpacity>
                 }
                 {(userTasks.length > 0 || ngoTasks.length > 0) && <FlatList
                     style={{flexGrow: 1}}
                     data={userTasks.length > 0 ? userTasks : ngoTasks}
                     keyExtractor={(item, index) => item.id.toString()}
                     renderItem={({ item, index }) => (
-                        <View key={index} style={{display: 'flex', backgroundColor:theme === 'light' ? '#83a638' :'#234006', width: "90%", justifyContent: 'center', borderRadius: 20, marginVertical: 10, paddingBottom: 10}} className="self-center">
+                        <View key={item.id} style={{display: 'flex', backgroundColor:theme === 'light' ? '#83a638' :'#234006', width: "90%", justifyContent: 'center', borderRadius: 20, marginVertical: 10, paddingBottom: 10}} className="self-center">
                             <View style={{flexDirection: 'row', alignItems: 'center', width: 270, paddingLeft: 25, paddingTop: 10,}}>
                                 <Image 
                                     style={{marginRight: 7,}}
